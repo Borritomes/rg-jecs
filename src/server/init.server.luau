@@ -1,1 +1,3 @@
-print("Hello world, from server!")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local _jabby = require(ReplicatedStorage.Packages.jabby)
