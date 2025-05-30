@@ -9,6 +9,7 @@ local cts = require(ReplicatedStorage.Shared.cts)
 local cvars = require(ReplicatedStorage.Shared.cvars)
 local jabby = require(ReplicatedStorage.Packages.jabby)
 local pipelines = require(ReplicatedStorage.Shared.pipelines)
+local playerDataService = require(ReplicatedStorage.Shared.services.playerDataService)
 local routes = require(ReplicatedStorage.Shared.routes)
 local scheduler = require(ReplicatedStorage.Shared.scheduler)
 local world = require(ReplicatedStorage.Shared.world)
@@ -42,6 +43,8 @@ end
 addSystems(ReplicatedStorage.Shared.systems)
 addSystems(ReplicatedStorage.Client.systems)
 
+playerDataService.addClient(1)
+
 --set current tick to server's or zero idk
 local beginFrame, endFrame = YetAnotherNet.createHook(routes)
 
@@ -60,13 +63,12 @@ RunService.Heartbeat:Connect(function(deltaTime)
 	local tickRate = cvars.TickRate
 	local pause = tickAdjustment.pause
 
-	--print("pause " .. pause)
 	beginFrame()
 	if pause == 0 then
 		local fastForward = tickAdjustment.fastForward
 		timeRemaining -= deltaTime
 
-		--[[ yoink
+		--[[
 			tailScaledTime += deltaTime
 			accumulator += deltaTime
 	
@@ -101,6 +103,4 @@ RunService.Heartbeat:Connect(function(deltaTime)
 		print(`pause {pause} is negative`)
 	end
 	endFrame()
-
-	--print(world:get(cts.Tick, cts.Tick))
 end)

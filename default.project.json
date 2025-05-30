@@ -2,7 +2,6 @@
   "name": "rg-jecs",
   "tree": {
     "$className": "DataModel",
-
     "ReplicatedStorage": {
       "Client": {
         "$path": "src/client"
@@ -12,15 +11,16 @@
       },
       "Packages": {
         "$path": "./Packages"
+      },
+      "Actions": {
+        "$className": "Folder"
       }
     },
-
     "ServerScriptService": {
       "Server": {
         "$path": "src/server"
       }
     },
-
     "StarterPlayer": {
       "StarterPlayerScripts": {
         "Client": {

@@ -3,6 +3,12 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local jecs = require(ReplicatedStorage.Shared.jecs)
 local world = require(script.Parent.world)
 
+export type inputcmd = { began: boolean, ended: boolean, weight: number }
+export type cmd = {
+	Forward: inputcmd?,
+}
+export type cmdHistory = { [number]: cmd }
+
 local cts = {
 	TickAdjustment = world:component() :: jecs.Entity<{ fastForward: number, pause: number }>,
 	Tick = world:component() :: jecs.Entity<number>,
@@ -11,6 +17,10 @@ local cts = {
 	Position = world:component() :: jecs.Entity<Vector3>,
 	Velocity = world:component() :: jecs.Entity<Vector3>,
 	Name = world:component() :: jecs.Entity<string>,
+	InputCommandMap = world:component() :: jecs.Entity<{ [any]: any }>,
+	BindingMap = world:component() :: jecs.Entity<{ [any]: any }>,
+	cmd = world:component() :: jecs.Entity<cmd>,
+	CmdHistory = world:component() :: jecs.Entity<cmdHistory>,
 
 	Replicate = jecs.tag(),
 	Prediction = jecs.tag(),

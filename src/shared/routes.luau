@@ -4,6 +4,7 @@ local YetAnotherNet = require(ReplicatedStorage.Packages.YetAnotherNet)
 local cts = require(script.Parent.cts)
 local jecs = require(script.Parent.jecs)
 local t = require(ReplicatedStorage.Packages.t)
+local types = require(ReplicatedStorage.Shared.types)
 local world = require(script.Parent.world)
 
 local route = YetAnotherNet.Route
@@ -55,11 +56,16 @@ local replicated: Route<{ changed: { [jecs.Entity]: { tags: { number }, number: 
 	route.new()
 
 local playerAdded: Route<{ Tick: number }> = route.new()
-local playerData: Route<any> = route.new()
+
+local playerData: Route<types.playerData> = route.new()
+
+--TODO: type check with t
+local cmd: Route<cts.cmd> = route.new()
 
 return {
 	adjustTick = adjustTick,
 	playerAdded = playerAdded,
 	replicated = replicated,
 	playerData = playerData,
+	cmd = cmd,
 }

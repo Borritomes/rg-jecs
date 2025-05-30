@@ -2,10 +2,10 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Planck = require(ReplicatedStorage.Packages.Planck)
-local clientDataService = require(ReplicatedStorage.Shared.services.clientDataService)
 local cts = require(ReplicatedStorage.Shared.cts)
 local jecs = require(ReplicatedStorage.Shared.jecs)
 local phases = require(ReplicatedStorage.Shared.phases)
+local playerDataService = require(ReplicatedStorage.Shared.services.playerDataService)
 local routes = require(ReplicatedStorage.Shared.routes)
 local world = require(ReplicatedStorage.Shared.world)
 
@@ -30,7 +30,7 @@ local function playerAdded()
 			world:set(ent2, jecs.pair(cts.Position, cts.Velocity), Vector3.new(2, 4, 6))
 		end
 
-		clientDataService.addClient(player.UserId)
+		playerDataService.addClient(player.UserId)
 		routes.playerAdded:send({ Tick = world:get(cts.Tick, cts.Tick) or 0 }):to(player)
 	end
 end

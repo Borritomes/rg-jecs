@@ -5,14 +5,15 @@ local cts = require(ReplicatedStorage.Shared.cts)
 local jecs = require(ReplicatedStorage.Shared.jecs)
 local phases = require(ReplicatedStorage.Shared.phases)
 local routes = require(ReplicatedStorage.Shared.routes)
+local tablekit = require(ReplicatedStorage.Packages.tablekit)
 local world = require(ReplicatedStorage.Shared.world)
 
-local previousSnapshot = {}
+local previousSnapshot = {} :: {}
 table.freeze(previousSnapshot)
 
 local function replicate()
 	local snapshot = {}
-	local removed = table.clone(previousSnapshot)
+	local removed = tablekit.DeepCopy(previousSnapshot)
 	local changes = {
 		removed = {},
 		changed = {},

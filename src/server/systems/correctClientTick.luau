@@ -1,8 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local clientDataService = require(ReplicatedStorage.Shared.services.clientDataService)
 local cts = require(ReplicatedStorage.Shared.cts)
 local phases = require(ReplicatedStorage.Shared.phases)
+local playerDataService = require(ReplicatedStorage.Shared.services.playerDataService)
 local routes = require(ReplicatedStorage.Shared.routes)
 local world = require(ReplicatedStorage.Shared.world)
 
@@ -21,21 +21,21 @@ local function correctClientTick()
 		local tickDifference = Tick - serverTick
 		--print(tickDifference)
 
-		local adjustmentGeneration = clientDataService.get(sender.UserId, "adjustmentGeneration") or 0
+		local adjustmentGeneration = playerDataService.get(sender.UserId, "adjustmentGeneration") or 0
 		--if the client's generation is greater than the server's
 		if adjustmentGeneration < data.adjustmentGeneration then
-			clientDataService.set(sender.UserId, "adjustmentGeneration", data.adjustmentGeneration)
+			playerDataService.set(sender.UserId, "adjustmentGeneration", data.adjustmentGeneration)
 			adjustmentGeneration = data.adjustmentGeneration
 			continue
 		end
 
-		local tickDifferenceHistory = clientDataService.get(sender.UserId, "tickDifferenceHistory")
+		local tickDifferenceHistory = playerDataService.get(sender.UserId, "tickDifferenceHistory")
 
 		if #tickDifferenceHistory > MAX_DATA_STORED then
-			clientDataService.removeFromTable(sender.UserId, "tickDifferenceHistory", 1)
+			playerDataService.removeFromTable(sender.UserId, "tickDifferenceHistory", 1)
 		end
 
-		clientDataService.addToTable(sender.UserId, "tickDifferenceHistory", tickDifference)
+		playerDataService.addToTable(sender.UserId, "tickDifferenceHistory", tickDifference)
 
 		if #tickDifferenceHistory <= MIN_EXCEPTABLE_DATA then
 			continue

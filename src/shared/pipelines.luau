@@ -13,7 +13,7 @@ local pipelines = {
 		:insert(phases.FixedUpdate)
 		:insert(phases.Last)
 		:insert(phases.PhysicsApply)
-		:insert(phases.NetworkSend)
+		:insert(phases.SendState)
 		:insert(phases.NetworkEnd),
 	Heartbeat = Planck.Pipeline.new("Heartbeat"):insert(phases.Heartbeat),
 }
