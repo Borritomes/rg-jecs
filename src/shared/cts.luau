@@ -5,11 +5,16 @@ local world = require(script.Parent.world)
 
 export type inputcmd = { began: boolean, ended: boolean, weight: number }
 export type cmd = {
-	Forward: inputcmd?,
+	forward: inputcmd?,
+	backward: inputcmd?,
+	strafeLeft: inputcmd?,
+	strafeRight: inputcmd?,
 }
 export type cmdHistory = { [number]: cmd }
 
 local cts = {
+	Player = world:component() :: jecs.Entity<Player>,
+	MoveDirection = world:component() :: jecs.Entity<Vector3>,
 	TickAdjustment = world:component() :: jecs.Entity<{ fastForward: number, pause: number }>,
 	Tick = world:component() :: jecs.Entity<number>,
 	LastUpdate = world:component() :: jecs.Entity<number>,
@@ -23,7 +28,7 @@ local cts = {
 	CmdHistory = world:component() :: jecs.Entity<cmdHistory>,
 
 	Replicate = jecs.tag(),
-	Prediction = jecs.tag(),
+	Predicted = jecs.tag(),
 }
 
 for name: any, component: any in cts do

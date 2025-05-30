@@ -1,12 +1,16 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local cts = require(ReplicatedStorage.Shared.cts)
 local playerDataService = {}
 
-type keys = "adjustmentGeneration" | "tickDifferenceHistory" | "commands" | "cmdHistory"
+type keys = "adjustmentGeneration" | "tickDifferenceHistory" | "commands" | "cmdHistory" | "cmd"
 
 local template = {
 	adjustmentGeneration = 0,
 	tickDifferenceHistory = {},
 	keybinds = {},
 	cmdHistory = {},
+	cmd = {} :: cts.cmd,
 }
 
 playerDataService.directAccess = {}

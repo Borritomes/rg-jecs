@@ -12,7 +12,7 @@ local store = skilift.store {
 
 	default_data = function()
 		return {
-			bindings = { W = { "+forward" } },
+			bindings = { W = { "+forward" }, T = { "test" } },
 		}
 	end,
 }

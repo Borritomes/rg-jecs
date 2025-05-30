@@ -11,6 +11,7 @@ local Phases = {
 	FixedUpdate = Planck.Phase.new("FixedUpdate"),
 	Last = Planck.Phase.new("Last"),
 	PhysicsApply = Planck.Phase.new("PhysicsApply"),
+	ReflectState = Planck.Phase.new("ReflectState"),
 	SendState = Planck.Phase.new("SendState"),
 	NetworkEnd = Planck.Phase.new("NetworkEnd"),
 }

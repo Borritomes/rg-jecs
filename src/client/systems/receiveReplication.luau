@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local cts = require(ReplicatedStorage.Shared.cts)
 local jecs = require(ReplicatedStorage.Shared.jecs)
 local phases = require(ReplicatedStorage.Shared.phases)
 local routes = require(ReplicatedStorage.Shared.routes)
