@@ -130,7 +130,6 @@ end
 
 function commands.execute(text: string)
 	local ok, result = commands.evaluate(text)
-
 	if ok == false then
 		return result
 	end

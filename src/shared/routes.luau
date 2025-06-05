@@ -52,7 +52,7 @@ adjustTick:addIncomingMiddleware(
 	end
 )
 
-local replicated: Route<{ changed: { [jecs.Entity]: { tags: { number }, number: supported | pair } }, removed: { [jecs.Entity]: { [jecs.Id]: any, ["tags"]: { number } } } }> =
+local replicate: Route<{ [jecs.Entity]: { { rel: jecs.Entity, trg: jecs.Entity, val: supported } | { comp: number, val: supported? } } }> =
 	route.new()
 
 local playerAdded: Route<{ Tick: number }> = route.new()
@@ -65,7 +65,7 @@ local cmd: Route<cts.cmd> = route.new()
 return {
 	adjustTick = adjustTick,
 	playerAdded = playerAdded,
-	replicated = replicated,
+	replicate = replicate,
 	playerData = playerData,
 	cmd = cmd,
 }

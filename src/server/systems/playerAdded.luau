@@ -29,6 +29,9 @@ local function playerAdded()
 			world:set(ent3, jecs.pair(cts.Position, cts.Velocity), Vector3.new(1, 2, 3))
 			world:set(ent2, jecs.pair(cts.Position, cts.Velocity), Vector3.new(2, 4, 6))
 		end
+		local character = world:entity()
+		world:set(character, cts.Player, player)
+		world:set(character, cts.MoveDirection, Vector3.zero)
 
 		playerDataService.addClient(player.UserId)
 		routes.playerAdded:send({ Tick = world:get(cts.Tick, cts.Tick) or 0 }):to(player)

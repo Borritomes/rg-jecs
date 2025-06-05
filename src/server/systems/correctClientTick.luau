@@ -81,7 +81,7 @@ local function correctClientTick()
 			fastForward = difference * -1
 		end
 
-		if doDebugPrint == true then
+		if true then
 			print "not synced"
 		end
 		routes.adjustTick

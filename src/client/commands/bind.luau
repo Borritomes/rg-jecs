@@ -34,6 +34,7 @@ local function bind(keycode: string, command: string): boolean
 		local ok, pressedCommandQueue = commands.evaluate(pressedCommand)
 
 		local pressedConnection = inputAction.Pressed:Connect(function()
+			print "pressed"
 			if ok == true and typeof(pressedCommandQueue) ~= "string" then
 				commands.executeQueue(pressedCommandQueue)
 			end
@@ -49,6 +50,7 @@ local function bind(keycode: string, command: string): boolean
 		if ok == true and typeof(releasedCommandQueue) ~= "string" then
 			releasedConnection = inputAction.Released:Connect(function()
 				if releasedCommand ~= nil then
+					print "released"
 					commands.executeQueue(releasedCommandQueue)
 				end
 			end)
