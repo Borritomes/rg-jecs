@@ -1,28 +1,21 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local cts = require(ReplicatedStorage.Shared.cts)
-local world = require(ReplicatedStorage.Shared.world)
+local cmd = require(ReplicatedStorage.Client.cmd)
 
-local function changeCmd(key, change)
-	print(key, change)
-	local cmd = world:get(cts.cmd, cts.cmd) or {}
-	if cmd[key] == nil then
-		cmd[key] = {
-			began = false,
-			ended = false,
-			weight = 0,
-		}
+local function changeCmd(key: string, change: number)
+	local cmdTrace = cmd.current[key]
+
+	if cmdTrace == nil then
+		cmdTrace = cmd.inputcmd()
+		cmd.current[key] = cmdTrace
 	end
+
+	cmdTrace.weight += change
 	if change > 0 then
-		cmd[key].began = true
+		cmdTrace.began = true
 	elseif change < 0 then
-		cmd[key].ended = true
-	else
-		return
+		cmdTrace.ended = true
 	end
-	cmd[key].weight += change
-
-	world:set(cts.cmd, cts.cmd, cmd)
 end
 
 return changeCmd

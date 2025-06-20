@@ -46,7 +46,8 @@ RunService.Heartbeat:Connect(function(deltaTime)
 	timeRemaining -= deltaTime
 
 	beginFrame()
-	local queuedTicks = 0
+	scheduler:run(pipelines.FixedUpdate)
+	--[[local queuedTicks = 0
 	if timeRemaining < 0 then
 		queuedTicks += math.floor((timeRemaining * tickRate) * -1)
 		timeRemaining = (1 / tickRate) - timeRemaining
@@ -59,7 +60,7 @@ RunService.Heartbeat:Connect(function(deltaTime)
 			world:set(cts.Tick, cts.Tick, (world:get(cts.Tick, cts.Tick) or 0) + 1)
 			scheduler:run(pipelines.FixedUpdate)
 		end
-	end
+	end]]
 	endFrame()
 
 	--print(world:get(cts.Tick, cts.Tick))

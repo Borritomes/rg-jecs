@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local applyTableChanges = require(ReplicatedStorage.Shared.utils.applyTableChanges)
-local bind = require(ReplicatedStorage.Client.commands.bind)
+local bind = require(ReplicatedStorage.Shared.commands.bind)
 local playerData = {}
 local data = {}
 

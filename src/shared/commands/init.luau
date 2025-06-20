@@ -2,12 +2,14 @@
 --!nolint LocalUnused
 --!nonstrict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
-type command = {
-	run: (...any) -> boolean,
-	protection: "none" | "cheat" | "dev",
-	args: { name: string, type: string }?,
-}
+local cts = require(ReplicatedStorage.Shared.cts)
+local routes = require(ReplicatedStorage.Shared.routes)
+
+type command = cts.command
+
+local isServer = RunService:IsServer()
 
 local commands = {}
 
@@ -119,7 +121,13 @@ end
 function commands.executeQueue(queue: { { command: command?, args: { any } } }): boolean
 	for i, value in queue do
 		if value.command then
-			value.command.run(table.unpack(value.args))
+			if isServer or value.command.protection == nil or value.command.protection == "none" then
+				value.command.run(table.unpack(value.args))
+			else
+				if value.command.protection == "server" then
+					routes.command:send(value)
+				end
+			end
 		else
 			return false
 		end

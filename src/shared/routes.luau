@@ -1,11 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local YetAnotherNet = require(ReplicatedStorage.Packages.YetAnotherNet)
-local cts = require(script.Parent.cts)
-local jecs = require(script.Parent.jecs)
+local cmd = require(ReplicatedStorage.Client.cmd)
+local cts = require(ReplicatedStorage.Shared.cts)
+local jecs = require(ReplicatedStorage.Shared.jecs)
 local t = require(ReplicatedStorage.Packages.t)
 local types = require(ReplicatedStorage.Shared.types)
-local world = require(script.Parent.world)
 
 local route = YetAnotherNet.Route
 type Route<U...> = YetAnotherNet.Route<U...>
@@ -32,26 +32,6 @@ export type supported =
 	| Vector3int16
 export type pair = { relationship: jecs.Id, target: jecs.Id, value: supported }
 
-local tAdjustTick = t.strictInterface({
-	pause = t.optional(t.number),
-	fastForward = t.optional(t.number),
-	adjustmentGeneration = t.number,
-})
-
-local adjustTick: Route<{ pause: number?, fastForward: number?, adjustmentGeneration: number }> = route.new()
-adjustTick:addOutgoingMiddleware(
-	function(adjustment: { pause: number?, fastForward: number?, adjustmentGeneration: number })
-		return world:get(cts.Tick, cts.Tick), adjustment
-	end
-)
-adjustTick:addIncomingMiddleware(
-	function(Tick: number, adjustment: { pause: number?, fastForward: number?, adjustmentGeneration: number })
-		if t.numberPositive(Tick) and tAdjustTick(adjustTick) then
-			return Tick, adjustment
-		end
-	end
-)
-
 local replicate: Route<{ [jecs.Entity]: { { rel: jecs.Entity, trg: jecs.Entity, val: supported } | { comp: number, val: supported? } } }> =
 	route.new()
 
@@ -60,12 +40,14 @@ local playerAdded: Route<{ Tick: number }> = route.new()
 local playerData: Route<types.playerData> = route.new()
 
 --TODO: type check with t
-local cmd: Route<cts.cmd> = route.new()
+local cmdRoute: Route<cmd.cmd?> = route.new()
+
+local command: Route<{ command: cts.command?, args: { any } }> = route.new()
 
 return {
-	adjustTick = adjustTick,
 	playerAdded = playerAdded,
 	replicate = replicate,
 	playerData = playerData,
-	cmd = cmd,
+	cmd = cmdRoute,
+	command = command,
 }

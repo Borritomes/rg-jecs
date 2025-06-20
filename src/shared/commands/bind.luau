@@ -1,6 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local commands = require(ReplicatedStorage.Client.commands)
+local commands = require(ReplicatedStorage.Shared.commands)
 local cts = require(ReplicatedStorage.Shared.cts)
 local world = require(ReplicatedStorage.Shared.world)
 
@@ -34,7 +34,6 @@ local function bind(keycode: string, command: string): boolean
 		local ok, pressedCommandQueue = commands.evaluate(pressedCommand)
 
 		local pressedConnection = inputAction.Pressed:Connect(function()
-			print "pressed"
 			if ok == true and typeof(pressedCommandQueue) ~= "string" then
 				commands.executeQueue(pressedCommandQueue)
 			end
@@ -50,7 +49,6 @@ local function bind(keycode: string, command: string): boolean
 		if ok == true and typeof(releasedCommandQueue) ~= "string" then
 			releasedConnection = inputAction.Released:Connect(function()
 				if releasedCommand ~= nil then
-					print "released"
 					commands.executeQueue(releasedCommandQueue)
 				end
 			end)
@@ -65,19 +63,25 @@ local function bind(keycode: string, command: string): boolean
 		}
 	end
 	if inputCommandMap[command][keycode] == nil then
-		local inputBinding = Instance.new("InputBinding")
-		inputBinding.Name = keycode
-		inputBinding.KeyCode = keycodeMap[keycode]
-		inputBinding.Parent = inputCommandMap[command].inputAction
+		if
+			typeof(inputCommandMap[command].inputAction) == "Instance"
+			and inputCommandMap[command].inputAction:IsA("InputAction")
+			and inputCommandMap[command].inputAction:FindFirstChild(keycode) == nil
+		then
+			local inputBinding = Instance.new("InputBinding")
+			inputBinding.Name = keycode
+			inputBinding.KeyCode = keycodeMap[keycode]
+			inputBinding.Parent = inputCommandMap[command].inputAction
 
-		if bindingMap[keycode] == nil then
-			bindingMap[keycode] = {}
+			if bindingMap[keycode] == nil then
+				bindingMap[keycode] = {}
+			end
+			table.insert(bindingMap[keycode], inputBinding)
+			if inputCommandMap[command].bindings == nil then
+				inputCommandMap[command].bindings = {}
+			end
+			inputCommandMap[command].bindings[keycode] = inputBinding
 		end
-		table.insert(bindingMap[keycode], inputBinding)
-		if inputCommandMap[command].bindings == nil then
-			inputCommandMap[command].bindings = {}
-		end
-		inputCommandMap[command].bindings[keycode] = inputBinding
 	end
 
 	world:set(cts.InputCommandMap, cts.InputCommandMap, inputCommandMap)

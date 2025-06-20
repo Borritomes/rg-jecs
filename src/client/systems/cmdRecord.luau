@@ -1,23 +1,21 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local cmd = require(ReplicatedStorage.Client.cmd)
 local cts = require(ReplicatedStorage.Shared.cts)
 local phases = require(ReplicatedStorage.Shared.phases)
 local routes = require(ReplicatedStorage.Shared.routes)
+local tablekit = require(ReplicatedStorage.Packages.tablekit)
 local world = require(ReplicatedStorage.Shared.world)
 
---TODO: delta compress maybe?
-
-local function sendCmd()
+local function cmdRecord()
 	local Tick = world:get(cts.Tick, cts.Tick) or 0
-	local cmdHistory = world:get(cts.CmdHistory, cts.CmdHistory) or {}
-	local cmd = world:get(cts.cmd, cts.cmd) or {}
-	cmdHistory[Tick] = cmd
-	world:set(cts.CmdHistory, cts.CmdHistory, cmdHistory)
 
-	routes.cmd:send(cmdHistory)
+	cmd.record[Tick] = tablekit.DeepCopy(cmd.current)
+
+	routes.cmd:send(cmd.record[Tick])
 end
 
 return {
-	system = sendCmd,
-	phase = phases.SendState,
+	system = cmdRecord,
+	phase = phases.InputProcess,
 }
