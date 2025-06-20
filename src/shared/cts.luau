@@ -13,9 +13,7 @@ export type playerData = { commands: { commandBindings } }
 
 local cts = {
 	Player = world:component() :: jecs.Entity<Player>,
-	TickAdjustment = world:component() :: jecs.Entity<{ fastForward: number, pause: number }>,
 	Tick = world:component() :: jecs.Entity<number>,
-	AdjustmentGeneration = world:component() :: jecs.Entity<number>,
 	Position = world:component() :: jecs.Entity<Vector3>,
 	Velocity = world:component() :: jecs.Entity<Vector3>,
 	Name = world:component() :: jecs.Entity<string>,
