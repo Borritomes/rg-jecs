@@ -5,6 +5,7 @@ local phases = require(ReplicatedStorage.Shared.phases)
 local routes = require(ReplicatedStorage.Shared.routes)
 local world = require(ReplicatedStorage.Shared.world)
 
+--TODO: this can probably be improved
 local function getInitialData()
 	for pos, sender, data in routes.playerAdded:query() do
 		print "got initial data"

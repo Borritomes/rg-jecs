@@ -1,9 +1,13 @@
 export type inputcmd = { began: boolean, ended: boolean, weight: number }
 export type cmd = {
+	timestamp: number?,
+	cameraCFrame: CFrame?,
+
 	forward: inputcmd?,
 	backward: inputcmd?,
 	strafeLeft: inputcmd?,
 	strafeRight: inputcmd?,
+	jump: inputcmd?,
 }
 export type cmdRecord = { [number]: cmd? }
 

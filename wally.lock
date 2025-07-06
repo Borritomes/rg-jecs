@@ -5,7 +5,7 @@ registry = "test"
 [[package]]
 name = "4611hd/rg-jecs"
 version = "0.1.0"
-dependencies = [["Planck", "yetanotherclown/planck@0.2.0-rc.2"], ["PlanckJabby", "yetanotherclown/planck-jabby@0.2.0-rc.1"], ["PlanckRunService", "yetanotherclown/planck-runservice@0.2.0-rc.1"], ["YetAnotherNet", "yetanotherclown/yetanothernet@0.10.0-alpha.5"], ["jabby", "alicesaidhi/jabby@0.2.2"], ["skilift", "alicesaidhi/skilift@0.3.1"], ["t", "osyrisrblx/t@3.1.1"], ["tablekit", "ffrostflame/tablekit@0.2.4"], ["ui-labs", "pepeeltoro41/ui-labs@2.3.8"]]
+dependencies = [["Lyra", "paradoxum-games/lyra@0.5.0-rc.0"], ["Planck", "yetanotherclown/planck@0.2.0-rc.2"], ["PlanckJabby", "yetanotherclown/planck-jabby@0.2.0-rc.1"], ["PlanckRunService", "yetanotherclown/planck-runservice@0.2.0-rc.1"], ["YetAnotherNet", "yetanotherclown/yetanothernet@0.10.0-alpha.5"], ["jabby", "alicesaidhi/jabby@0.2.2"], ["t", "osyrisrblx/t@3.1.1"], ["tablekit", "ffrostflame/tablekit@0.2.4"], ["ui-labs", "pepeeltoro41/ui-labs@2.3.8"]]
 
 [[package]]
 name = "alicesaidhi/jabby"
@@ -18,13 +18,13 @@ version = "0.1.2"
 dependencies = [["vide", "centau/vide@0.3.1"]]
 
 [[package]]
-name = "alicesaidhi/skilift"
+name = "centau/vide"
 version = "0.3.1"
 dependencies = []
 
 [[package]]
-name = "centau/vide"
-version = "0.3.1"
+name = "evaera/promise"
+version = "4.0.0"
 dependencies = []
 
 [[package]]
@@ -36,6 +36,11 @@ dependencies = []
 name = "osyrisrblx/t"
 version = "3.1.1"
 dependencies = []
+
+[[package]]
+name = "paradoxum-games/lyra"
+version = "0.5.0-rc.0"
+dependencies = [["Promise", "evaera/promise@4.0.0"], ["t", "osyrisrblx/t@3.1.1"]]
 
 [[package]]
 name = "pepeeltoro41/ui-labs"

@@ -27,6 +27,7 @@ end
 ContextActionService:BindAction("Open Jabby Home", createWidget, false, Enum.KeyCode.LeftAlt)
 
 local timeRemaining = 1 / cvars.TickRate
+local isNetFrameActive = false
 local systems = {}
 
 local function addSystems(folder)
@@ -52,7 +53,11 @@ scheduler
 	:run(pipelines.Heartbeat)
 
 RunService.Heartbeat:Connect(function(deltaTime)
-	local tickAdjustment = world:get(cts.TickAdjustment, cts.TickAdjustment) or {
+	--[[local tickAdjustment = world:get(cts.TickAdjustment, cts.TickAdjustment) or {
+		pause = 0,
+		fastForward = 0,
+	}]]
+	local tickAdjustment = {
 		pause = 0,
 		fastForward = 0,
 	}
@@ -60,7 +65,10 @@ RunService.Heartbeat:Connect(function(deltaTime)
 	local tickRate = cvars.TickRate
 	local pause = tickAdjustment.pause
 
-	beginFrame()
+	if isNetFrameActive == false then
+		beginFrame()
+		isNetFrameActive = true
+	end
 	if pause == 0 then
 		local fastForward = tickAdjustment.fastForward
 		timeRemaining -= deltaTime
@@ -90,6 +98,8 @@ RunService.Heartbeat:Connect(function(deltaTime)
 				scheduler:run(pipelines.FixedUpdate)
 			end
 			world:set(cts.TickAdjustment, cts.TickAdjustment, { fastForward = 0, pause = pause })
+			endFrame()
+			isNetFrameActive = false
 		end
 	elseif pause > 0 then
 		warn("paused")
@@ -100,5 +110,4 @@ RunService.Heartbeat:Connect(function(deltaTime)
 	else
 		print(`pause {pause} is negative`)
 	end
-	endFrame()
 end)

@@ -3,10 +3,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local tablekit = require(ReplicatedStorage.Packages.tablekit)
 
 -- most stuff here is from https://github.com/MaximumADHD/Roblox-Boilerplate/blob/main/Shared/DeltaTable.luau
-local function getTableChanges(oldTable: any, newTable: any)
+local function getTableChanges(oldTable: {}?, newTable: {})
 	if oldTable == nil then
-		warn("oldTable is nil")
-		oldTable = tablekit.DeepCopy(newTable)
+		return newTable, 0
 	end
 
 	local changes = {}

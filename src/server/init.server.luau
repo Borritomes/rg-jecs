@@ -13,6 +13,7 @@ local scheduler = require(ReplicatedStorage.Shared.scheduler)
 local world = require(ReplicatedStorage.Shared.world)
 
 local timeRemaining = 1 / cvars.TickRate
+local isNetFrameActive = false
 local systems = {}
 
 local function addSystems(folder)
@@ -45,9 +46,11 @@ RunService.Heartbeat:Connect(function(deltaTime)
 
 	timeRemaining -= deltaTime
 
-	beginFrame()
-	scheduler:run(pipelines.FixedUpdate)
-	--[[local queuedTicks = 0
+	if isNetFrameActive == false then
+		beginFrame()
+		isNetFrameActive = true
+	end
+	local queuedTicks = 0
 	if timeRemaining < 0 then
 		queuedTicks += math.floor((timeRemaining * tickRate) * -1)
 		timeRemaining = (1 / tickRate) - timeRemaining
@@ -59,9 +62,10 @@ RunService.Heartbeat:Connect(function(deltaTime)
 		for count = 0, queuedTicks - 1 do
 			world:set(cts.Tick, cts.Tick, (world:get(cts.Tick, cts.Tick) or 0) + 1)
 			scheduler:run(pipelines.FixedUpdate)
+			endFrame()
+			isNetFrameActive = false
 		end
-	end]]
-	endFrame()
+	end
 
 	--print(world:get(cts.Tick, cts.Tick))
 end)

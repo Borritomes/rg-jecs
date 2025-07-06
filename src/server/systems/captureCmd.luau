@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local phases = require(ReplicatedStorage.Shared.phases)
-local players = require(ServerScriptService.Server.players)
+local playersState = require(ServerScriptService.Server.playersState)
 local routes = require(ReplicatedStorage.Shared.routes)
 
 local function captureCmd()
@@ -14,8 +14,12 @@ local function captureCmd()
 			return
 		end
 
-		table.remove(players[player].cmdBuffer, 1)
-		table.insert(players[player].cmdBuffer, cmd)
+		if cmd.timestamp ~= nil then
+			routes.confirmCmd:send(cmd.timestamp):to(player)
+		end
+
+		table.remove(playersState[player].cmdBuffer, 1)
+		table.insert(playersState[player].cmdBuffer, cmd)
 	end
 end
 

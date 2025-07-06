@@ -16,7 +16,7 @@ local pipelines = {
 		:insert(phases.ReflectState)
 		:insert(phases.SendState)
 		:insert(phases.NetworkEnd),
-	Heartbeat = Planck.Pipeline.new("Heartbeat"):insert(phases.Heartbeat),
+	Heartbeat = Planck.Pipeline.new("Heartbeat"):insert(phases.PreHeartbeat):insert(phases.Heartbeat),
 }
 
 return pipelines

@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local cvars = require(ReplicatedStorage.Shared.cvars)
 return {
 	run = function()
-		cvars.MouseLocked = not cvars.MouseLocked
+		cvars.CameraOffset -= 1
 	end,
-	security = "server",
+	security = "none",
 }

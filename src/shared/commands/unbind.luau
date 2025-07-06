@@ -4,11 +4,14 @@ local cts = require(ReplicatedStorage.Shared.cts)
 local world = require(ReplicatedStorage.Shared.world)
 
 local function unbind(key: string)
+	if key == "__removed" then
+		return
+	end
 	key = key:upper()
 	local bindingMap = world:get(cts.BindingMap, cts.BindingMap) or {}
 
 	if bindingMap[key] == nil then
-		print "whar"
+		print(`bindingMap[{key}] is nil`)
 		return
 	end
 	for i, v in bindingMap[key] do

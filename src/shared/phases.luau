@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Planck = require(ReplicatedStorage.Packages.Planck)
 
 local Phases = {
+	PreHeartbeat = Planck.Phase.new("PreHeartbeat"),
 	Heartbeat = Planck.Phase.new("Heartbeat"),
 	NetworkStart = Planck.Phase.new("NetworkStart"),
 	Replication = Planck.Phase.new("Replication"),

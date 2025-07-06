@@ -7,7 +7,7 @@ local character = require(ReplicatedStorage.Shared.prototypes.character)
 local cts = require(ReplicatedStorage.Shared.cts)
 local jecs = require(ReplicatedStorage.Shared.jecs)
 local phases = require(ReplicatedStorage.Shared.phases)
-local players = require(ServerScriptService.Server.players)
+local playersState = require(ServerScriptService.Server.playersState)
 local routes = require(ReplicatedStorage.Shared.routes)
 local world = require(ReplicatedStorage.Shared.world)
 
@@ -15,7 +15,7 @@ local hasNewEvent, collectEvents = Planck.onEvent(Players, Players.PlayerAdded)
 
 local function playerAdded()
 	for i, player: Player in collectEvents() do
-		do
+		if false then
 			local ent = world:entity()
 			world:set(ent, cts.Name, "ent")
 			local ent2 = world:entity()
@@ -31,9 +31,9 @@ local function playerAdded()
 			world:set(ent3, jecs.pair(cts.Position, cts.Velocity), Vector3.new(1, 2, 3))
 			world:set(ent2, jecs.pair(cts.Position, cts.Velocity), Vector3.new(2, 4, 6))
 		end
-		local _character = character(player)
+		character(player)
 
-		players[player] = players[player] or { cmdBuffer = {} }
+		playersState[player] = playersState[player] or { cmdBuffer = {} }
 		routes.playerAdded:send({ Tick = world:get(cts.Tick, cts.Tick) or 0 }):to(player)
 	end
 end

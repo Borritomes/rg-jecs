@@ -13,6 +13,10 @@ local MAX_COMMAND_LENGTH = 512
 
 local function bind(keycode: string, command: string): boolean
 	keycode = keycode:upper()
+	if keycodeMap[keycode] == nil or keycode == "__REMOVED" then
+		print(`unkown keycode {keycode}`)
+		return false
+	end
 	if command:len() > MAX_COMMAND_LENGTH then
 		return false
 	end
@@ -28,7 +32,7 @@ local function bind(keycode: string, command: string): boolean
 		local releasedCommand = nil
 
 		if command:sub(1, 1) == "+" then
-			releasedCommand = "-" .. command:sub(2, command:len())
+			releasedCommand = "-" .. command:sub(2)
 		end
 
 		local ok, pressedCommandQueue = commands.evaluate(pressedCommand)
