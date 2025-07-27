@@ -42,7 +42,15 @@ local cmdRoute: Route<cmd.cmd?> = route.new()
 
 local confirmCmd: Route<number> = route.new()
 
-local command: Route<{ command: cts.command?, args: { any } }> = route.new()
+local command: Route<string, { any }> = route.new()
+command:addIncomingMiddleware(function(a)
+	print("incoming")
+	return a
+end)
+command:addOutgoingMiddleware(function(a)
+	print("outgoing")
+	return a
+end)
 
 return {
 	playerAdded = playerAdded,

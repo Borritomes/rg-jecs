@@ -16,7 +16,7 @@ local function camera()
 	local position = Vector3.new(0, 0, 0)
 	local size = Vector3.zero
 
-	for entity, player, pos in world:query(cts.Player, cts.Position) do
+	for entity, player, pos in world:query(cts.Controller, cts.Position) do
 		if player == localPlayer then
 			position = world:get(entity, jecs.pair(cts.Interp, cts.Position)) or pos
 			if world:has(entity, cts.Size) then

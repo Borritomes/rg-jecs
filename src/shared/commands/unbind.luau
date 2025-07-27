@@ -1,31 +1,36 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local ServerScriptService = game:GetService("ServerScriptService")
 
-local cts = require(ReplicatedStorage.Shared.cts)
-local world = require(ReplicatedStorage.Shared.world)
+local isServer = RunService:IsServer()
 
-local function unbind(key: string)
-	if key == "__removed" then
-		return
-	end
-	key = key:upper()
-	local bindingMap = world:get(cts.BindingMap, cts.BindingMap) or {}
-
-	if bindingMap[key] == nil then
-		print(`bindingMap[{key}] is nil`)
-		return
-	end
-	for i, v in bindingMap[key] do
-		if typeof(v) == "Instance" then
-			v:Destroy()
-		end
-	end
-
-	bindingMap[key] = nil
-	world:set(cts.BindingMap, cts.BindingMap, bindingMap)
+local commands = require(ReplicatedStorage.Shared.commands)
+local playerData = nil
+if isServer == true then
+	playerData = require(ServerScriptService.Server.playerData)
 end
 
-return {
+local function unbind(player: Player, key: string)
+	if key == nil then
+		return
+	end
+	if isServer == false then
+		return
+	end
+
+	playerData:update(player, function(data)
+		if data.bindings[key] == nil then
+			return false
+		end
+
+		data.bindings[key] = nil
+		return true
+	end)
+end
+
+return commands.createCommand({
+	name = "unbind",
 	run = unbind,
 	protection = "none",
-	args = { { name = "key", type = "string" } },
-}
+	context = "client",
+})

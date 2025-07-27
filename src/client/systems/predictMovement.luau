@@ -11,11 +11,11 @@ local world = require(ReplicatedStorage.Shared.world)
 local localPlayer = Players.LocalPlayer
 
 local function predictMovement()
-	for entity, player, position, velocity in world:query(cts.Player, cts.Position, cts.Velocity) do
-		if player == localPlayer then
-			if position == world:get(entity, jecs.pair(cts.Predicted, cts.Position)) then
+	for entity, controller, position, velocity in world:query(cts.Controller, cts.Position, cts.Velocity) do
+		if controller == localPlayer then
+			--[[if position == world:get(entity, jecs.pair(cts.Predicted, cts.Position)) then
 				continue
-			end
+			end]]
 			local predictedPosition = position
 			local vel = velocity
 

@@ -16,11 +16,11 @@ local timeRemaining = 1 / cvars.TickRate
 local isNetFrameActive = false
 local systems = {}
 
-local function addSystems(folder)
+local function addSystems(folder: Folder)
 	if folder:GetChildren() == {} then
 		return
 	end
-	for _, system in folder:GetChildren() do
+	for _, system in folder:GetDescendants() do
 		if not system:IsA("ModuleScript") then
 			continue
 		end

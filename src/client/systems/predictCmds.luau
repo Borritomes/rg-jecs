@@ -21,7 +21,7 @@ end
 
 return {
 	system = predictCmds,
-	phase = phases.Replication,
+	phase = phases.InputProcess,
 	iter = function(): { cmd.cmd? }
 		return iter
 	end,

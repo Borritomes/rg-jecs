@@ -13,6 +13,7 @@ local template = {
 		A = { "+strafeLeft" },
 		D = { "+strafeRight" },
 		Space = { "+jump" },
+		E = { "+use" },
 		T = { "test" },
 		Up = { "zoomIn" },
 		Down = { "zoomOut" },

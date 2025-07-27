@@ -1,17 +1,18 @@
---!nolint LocalShadow
---!nolint LocalUnused
---!nonstrict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
+local changeCmd = require(ReplicatedStorage.Shared.utils.changeCmd)
+local config = require(ReplicatedStorage.Client.config)
 local cts = require(ReplicatedStorage.Shared.cts)
 local routes = require(ReplicatedStorage.Shared.routes)
 
 type command = cts.command
+type commandQueue = { { command: command?, args: { any } } }
 
 local isServer = RunService:IsServer()
 
 local commands = {}
+commands.registered = {}
 
 local function stringToType(value: string, Type: string): (boolean, any)
 	if Type == "number" then
@@ -39,7 +40,64 @@ local function stringToType(value: string, Type: string): (boolean, any)
 	return false
 end
 
-function commands.evaluate(text: string): (boolean, string | { { command: command?, args: { any } } })
+function commands.registerCommand(command: cts.command)
+	commands.registered[command.name] = command
+end
+
+function commands.createCommand(props: cts.command): cts.command
+	return {
+		name = props.name,
+		run = props.run,
+		context = props.context,
+		protection = props.protection,
+		args = props.args,
+	}
+end
+
+function commands.createCmdCommand(name): cts.command
+	commands.registered["-" .. name] = {
+		name = name,
+		run = function()
+			changeCmd(name, -1)
+		end,
+		context = "client",
+		protection = "none",
+	}
+
+	return {
+		name = "+" .. name,
+		run = function()
+			changeCmd(name, 1)
+		end,
+		context = "client",
+		protection = "none",
+	}
+end
+
+local function getCommand(name: string): command?
+	if commands.registered[name] ~= nil then
+		return commands.registered[name]
+	elseif config.aliases[name] ~= nil then
+		local ok, queue = commands.evaluate(config.aliases[name])
+
+		if ok == true and typeof(queue) ~= "string" then
+			return {
+				name = name,
+				run = function()
+					commands.executeQueue(queue)
+				end,
+				protection = "none",
+				context = "client",
+			}
+		else
+			return nil
+		end
+	end
+
+	return nil
+end
+
+function commands.evaluate(text: string): (boolean, string | commandQueue)
 	if text == nil or text == "" then
 		return false, "no command given"
 	end
@@ -66,11 +124,13 @@ function commands.evaluate(text: string): (boolean, string | { { command: comman
 				currentArgConstruct = ""
 
 				if i == textLength then
-					if script:FindFirstChild(currentWord) then
-						currentCommand = require(script:FindFirstChild(currentWord))
-					else
+					local commandResult = getCommand(currentWord)
+					if commandResult == nil then
 						return false, "unkown command " .. currentWord
 					end
+
+					currentCommand = commandResult
+
 					expect = "argument"
 					table.insert(queue, { command = currentCommand, args = arguments })
 				end
@@ -83,11 +143,13 @@ function commands.evaluate(text: string): (boolean, string | { { command: comman
 					currentWord ..= char
 				end
 				if expect == "command" and currentWord ~= "" then
-					if script:FindFirstChild(currentWord) then
-						currentCommand = require(script:FindFirstChild(currentWord))
-					else
+					local commandResult = getCommand(currentWord)
+					if commandResult == nil then
 						return false, "unkown command " .. currentWord
 					end
+
+					currentCommand = commandResult
+
 					expect = "argument"
 					currentWord = ""
 				else
@@ -118,14 +180,15 @@ function commands.evaluate(text: string): (boolean, string | { { command: comman
 	return true, queue
 end
 
-function commands.executeQueue(queue: { { command: command?, args: { any } } }): boolean
+function commands.executeQueue(queue: commandQueue): boolean
 	for i, value in queue do
 		if value.command then
 			if isServer or value.command.protection == nil or value.command.protection == "none" then
 				value.command.run(table.unpack(value.args))
 			else
-				if value.command.protection == "server" then
-					routes.command:send(value)
+				if value.command.context == "server" then
+					print("sent command to server")
+					routes.command:send(value.command.name, value.args)
 				end
 			end
 		else
@@ -134,6 +197,19 @@ function commands.executeQueue(queue: { { command: command?, args: { any } } }):
 	end
 
 	return true
+end
+
+function commands.executeSingle(command: string, args: { any }?)
+	local command = commands.registered[command]
+	if command == nil then
+		return
+	end
+
+	if args ~= nil then
+		command.run(table.unpack(args))
+	else
+		command.run()
+	end
 end
 
 function commands.execute(text: string)

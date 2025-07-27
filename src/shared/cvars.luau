@@ -1,6 +1,6 @@
 local cvars = {
 	Interp = 0.2,
-	TickRate = 30,
+	TickRate = 60,
 	Test = true,
 	fov = 90,
 	CameraClampY = 89,
@@ -16,6 +16,7 @@ local cvars = {
 	JumpForce = 270,
 	Sensitivity = 1,
 	CameraOffset = 10,
+	useRange = 15,
 }
 
 return cvars

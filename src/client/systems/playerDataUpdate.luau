@@ -1,9 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local bind = require(ReplicatedStorage.Shared.commands.bind)
+local createAction = require(ReplicatedStorage.Shared.utils.createAction)
 local phases = require(ReplicatedStorage.Shared.phases)
+local removeAction = require(ReplicatedStorage.Shared.utils.removeAction)
 local routes = require(ReplicatedStorage.Shared.routes)
-local unbind = require(ReplicatedStorage.Shared.commands.unbind)
 
 local function playerDataUpdate()
 	for pos, sender, changes in routes.playerData:query():iter() do
@@ -11,12 +11,12 @@ local function playerDataUpdate()
 			for keycode, commands in changes.bindings do
 				if keycode == "__removed" then
 					for i, keycode in commands do
-						unbind.run(keycode)
+						removeAction(keycode)
 					end
 					continue
 				end
 				for _, command in commands do
-					bind.run(keycode, command)
+					createAction(keycode, command)
 				end
 			end
 		end

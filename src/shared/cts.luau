@@ -4,15 +4,17 @@ local jecs = require(ReplicatedStorage.Shared.jecs)
 local world = require(script.Parent.world)
 
 export type command = {
-	run: (...any) -> boolean,
+	name: string,
+	run: (...any) -> (),
 	protection: "none" | "cheat" | "dev",
+	context: "client" | "server",
 	args: { name: string, type: string }?,
 }
 export type commandBindings = { [string]: { string } }
 export type playerData = { commands: { commandBindings } }
 
 local cts = {
-	Player = world:component() :: jecs.Entity<Player>,
+	Controller = world:component() :: jecs.Entity<Player>,
 	TickAdjustment = world:component() :: jecs.Entity<{ fastForward: number, pause: number }>,
 	Tick = world:component() :: jecs.Entity<number>,
 	LastServerProcessedCmd = world:component() :: jecs.Entity<number>,
@@ -23,12 +25,14 @@ local cts = {
 	Name = world:component() :: jecs.Entity<string>,
 	InputCommandMap = world:component() :: jecs.Entity<{ [any]: any }>,
 	BindingMap = world:component() :: jecs.Entity<{ [any]: any }>,
+	OnButtonActivate = world:component() :: jecs.Entity<(Player) -> ()>,
 
 	Predicted = world:component(),
 	Interp = world:component(),
 
 	InterpolatePosition = jecs.tag(),
 	Replicate = jecs.tag(),
+	Button = jecs.tag(),
 }
 
 for name: any, component: any in cts do

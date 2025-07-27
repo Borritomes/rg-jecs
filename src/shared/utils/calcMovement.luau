@@ -9,7 +9,6 @@ return function(cmd: cmd.cmd?, position: Vector3, velocity: Vector3, size: Vecto
 	local wishDir, isJump = getWishDir(cmd)
 
 	local resultVelocity = calcMoveVelocity(velocity, position, size, wishDir, isJump)
-	--resultVelocity -= Vector3.new(0, cvars.Gravity * (1 / cvars.TickRate), 0)
 	local resultPosition = flyMove(position, resultVelocity, size)
 
 	return resultPosition, resultVelocity

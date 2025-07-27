@@ -114,5 +114,5 @@ end
 
 return {
 	system = replicate,
-	phase = phases.Replication,
+	phase = phases.SendState,
 }

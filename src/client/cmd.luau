@@ -8,6 +8,7 @@ export type cmd = {
 	strafeLeft: inputcmd?,
 	strafeRight: inputcmd?,
 	jump: inputcmd?,
+	use: inputcmd?,
 }
 export type cmdRecord = { [number]: cmd? }
 

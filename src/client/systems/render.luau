@@ -31,5 +31,5 @@ end
 
 return {
 	system = render,
-	phase = phases.ReflectState,
+	phase = phases.Heartbeat,
 }
