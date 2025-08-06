@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local calcMovement = require(ReplicatedStorage.Shared.utils.calcMovement)
 local cts = require(ReplicatedStorage.Shared.cts)
-local jecs = require(ReplicatedStorage.Shared.jecs)
+local jecs = require(ReplicatedStorage.Packages.jecs)
 local phases = require(ReplicatedStorage.Shared.phases)
 local predictCmds = require(ReplicatedStorage.Client.systems.predictCmds)
 local world = require(ReplicatedStorage.Shared.world)

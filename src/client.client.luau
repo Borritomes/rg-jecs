@@ -53,27 +53,16 @@ scheduler
 	:run(pipelines.Heartbeat)
 
 RunService.Heartbeat:Connect(function(deltaTime)
-	--[[local tickAdjustment = world:get(cts.TickAdjustment, cts.TickAdjustment) or {
-		pause = 0,
-		fastForward = 0,
-	}]]
-	local tickAdjustment = {
-		pause = 0,
-		fastForward = 0,
-	}
-
 	local tickRate = cvars.TickRate
-	local pause = tickAdjustment.pause
 
 	if isNetFrameActive == false then
 		beginFrame()
 		isNetFrameActive = true
 	end
-	if pause == 0 then
-		local fastForward = tickAdjustment.fastForward
-		timeRemaining -= deltaTime
 
-		--[[
+	timeRemaining -= deltaTime
+
+	--[[
 			tailScaledTime += deltaTime
 			accumulator += deltaTime
 	
@@ -84,30 +73,20 @@ RunService.Heartbeat:Connect(function(deltaTime)
 				stepCount += 1
 			end
 		]]
-		local queuedTicks = 0
-		if timeRemaining < 0 then
-			queuedTicks += math.floor((timeRemaining * tickRate) * -1)
-			timeRemaining = (1 / tickRate) - timeRemaining
+	local queuedTicks = 0
+	if timeRemaining < 0 then
+		queuedTicks += math.floor((timeRemaining * tickRate) * -1)
+		timeRemaining = (1 / tickRate) - timeRemaining
 
-			queuedTicks += 1
-		end
+		queuedTicks += 1
+	end
 
-		if queuedTicks > 0 then
-			for count = 0, (queuedTicks + fastForward) - 1 do
-				world:set(cts.Tick, cts.Tick, (world:get(cts.Tick, cts.Tick) or 0) + 1)
-				scheduler:run(pipelines.FixedUpdate)
-			end
-			world:set(cts.TickAdjustment, cts.TickAdjustment, { fastForward = 0, pause = pause })
-			endFrame()
-			isNetFrameActive = false
+	if queuedTicks > 0 then
+		for count = 0, queuedTicks - 1 do
+			world:set(cts.Tick, cts.Tick, (world:get(cts.Tick, cts.Tick) or 0) + 1)
+			scheduler:run(pipelines.FixedUpdate)
 		end
-	elseif pause > 0 then
-		warn("paused")
-		world:set(cts.TickAdjustment, cts.TickAdjustment, {
-			fastForward = tickAdjustment.fastForward,
-			pause = pause - 1,
-		})
-	else
-		print(`pause {pause} is negative`)
+		endFrame()
+		isNetFrameActive = false
 	end
 end)

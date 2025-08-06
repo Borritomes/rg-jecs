@@ -12,7 +12,7 @@ return function(
 		Position: Fusion.UsedAs<UDim2>?,
 		Size: Fusion.UsedAs<UDim2>?,
 
-		Contents: Fusion.Child?,
+		[typeof(Fusion.Children)]: { Fusion.Child? },
 	}
 ): Fusion.Child
 	local scope = scope:innerScope()
@@ -26,6 +26,6 @@ return function(
 
 		BackgroundTransparency = 1,
 
-		[Fusion.Children] = props.Contents,
+		[Fusion.Children] = props[Fusion.Children],
 	}
 end

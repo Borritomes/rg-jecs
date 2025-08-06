@@ -6,9 +6,11 @@ local routes = require(ReplicatedStorage.Shared.routes)
 
 local function serverCommands()
 	for pos, sender, command, args in routes.command:query():iter() do
-		print("server commanding")
+		if typeof(sender) == "string" then
+			return
+		end
 		--TODO: make sure the player has permission to execute server commands
-		commands.executeSingle(command, args)
+		commands.executeSingle(command, args, sender)
 	end
 end
 

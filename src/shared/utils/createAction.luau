@@ -64,6 +64,7 @@ return function(keycode: string, command: string): boolean
 		end
 
 		inputCommandMap[command] = {
+			bindings = {},
 			inputAction = inputAction,
 			pressedConnection = pressedConnection,
 			releasedConnection = releasedConnection,

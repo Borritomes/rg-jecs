@@ -2,32 +2,61 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Fusion = require(ReplicatedStorage.Shared.Fusion)
-
+local Holder = require(ReplicatedStorage.Client.UI.Components.Holder)
+local Stroke = require(ReplicatedStorage.Client.UI.Components.Stroke)
+local theme = require(ReplicatedStorage.Client.UI.theme)
+local udim2 = require(ReplicatedStorage.Client.UI.Utils.udim2)
 return function(
 	scope: Fusion.Scope,
 	props: {
-		Name: Fusion.UsedAs<string>?,
+		LayoutOrder: Fusion.UsedAs<number>?,
 
-		AnchorPoint: Fusion.UsedAs<Vector2>?,
-		Position: Fusion.UsedAs<UDim2>?,
-		Size: Fusion.UsedAs<UDim2>?,
-
-		PlaceholderText: Fusion.UsedAs<string>?,
+		OnTextEntered: (string) -> (),
 	}
 ): Fusion.Child
-	local scope = scope:innerScope()
+	local scope = scope:innerScope({
+		Stroke = Stroke,
+		Holder = Holder,
+		udim2 = udim2,
+	})
 
-	local textInput = scope:New "TextBox" {
-		Name = props.Name,
+	local style = theme.context:now()
 
-		AnchorPoint = props.AnchorPoint,
-		Position = props.Position,
-		Size = props.Size,
+	local inputText = scope:Value("")
 
-		PlaceholderText = props.PlaceholderText,
+	return scope:Holder {
+		Size = scope:udim2(1, 0, 0, 32),
+
+		LayoutOrder = props.LayoutOrder,
+
+		[Fusion.Children] = {
+			scope:New "TextBox" {
+				Size = UDim2.fromScale(1, 1),
+
+				TextSize = style.textTitle,
+				TextColor3 = style.title,
+				TextXAlignment = Enum.TextXAlignment.Left,
+				TextTruncate = Enum.TextTruncate.SplitWord,
+
+				BackgroundColor3 = style.info,
+
+				Text = inputText,
+
+				[Fusion.Out "ContentText"] = inputText,
+
+				[Fusion.OnEvent "FocusLost"] = function(enterPressed: boolean)
+					if enterPressed == true then
+						if props.OnTextEntered ~= nil then
+							props.OnTextEntered(Fusion.peek(inputText))
+						end
+						inputText:set("")
+					end
+				end,
+			},
+			scope:New "UIPadding" {
+				PaddingLeft = UDim.new(0, 2),
+			},
+			scope:Stroke(),
+		},
 	}
-
-	textInput:AddTag("TextInput")
-
-	return textInput
 end

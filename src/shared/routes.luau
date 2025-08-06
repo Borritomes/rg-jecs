@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local YetAnotherNet = require(ReplicatedStorage.Packages.YetAnotherNet)
 local cmd = require(ReplicatedStorage.Client.cmd)
 local cts = require(ReplicatedStorage.Shared.cts)
-local jecs = require(ReplicatedStorage.Shared.jecs)
+local jecs = require(ReplicatedStorage.Packages.jecs)
 
 local route = YetAnotherNet.Route
 type Route<U...> = YetAnotherNet.Route<U...>
@@ -43,13 +43,11 @@ local cmdRoute: Route<cmd.cmd?> = route.new()
 local confirmCmd: Route<number> = route.new()
 
 local command: Route<string, { any }> = route.new()
-command:addIncomingMiddleware(function(a)
-	print("incoming")
-	return a
+command:addIncomingMiddleware(function(a, b)
+	return a, b
 end)
-command:addOutgoingMiddleware(function(a)
-	print("outgoing")
-	return a
+command:addOutgoingMiddleware(function(a, b)
+	return a, b
 end)
 
 return {

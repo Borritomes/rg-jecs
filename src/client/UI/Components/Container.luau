@@ -1,8 +1,10 @@
 --!nolint LocalShadow
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Box = require(ReplicatedStorage.Client.UI.Components.Box)
 local Fusion = require(ReplicatedStorage.Shared.Fusion)
-local image = require(ReplicatedStorage.Client.UI.Components.image)
+local Stroke = require(ReplicatedStorage.Client.UI.Components.Stroke)
+local theme = require(ReplicatedStorage.Client.UI.theme)
 
 return function(
 	scope: Fusion.Scope,
@@ -13,28 +15,30 @@ return function(
 		Position: Fusion.UsedAs<UDim2>?,
 		Size: Fusion.UsedAs<UDim2>?,
 
-		Image: Fusion.UsedAs<string>?,
-
-		onActivate: () -> ()?,
+		Parent: Fusion.UsedAs<Instance>?,
 
 		[typeof(Fusion.Children)]: Fusion.Child?,
 	}
 ): Fusion.Child
-	local scope = scope:innerScope({ image = image })
+	local scope = scope:innerScope({
+		Box = Box,
+		Stroke = Stroke,
+	})
 
-	local imageElement = scope:image {
+	return scope:Box {
 		Name = props.Name,
 
 		AnchorPoint = props.AnchorPoint,
 		Position = props.Position,
 		Size = props.Size,
 
-		Image = props.Image,
+		BackgroundColor3 = theme.context:now().background,
 
-		onActivate = props.onActivate,
-	} :: Instance
+		Parent = props.Parent,
 
-	imageElement:AddTag("SmallImage")
-
-	return imageElement
+		[Fusion.Children] = {
+			props[Fusion.Children],
+			scope:Stroke(),
+		},
+	}
 end

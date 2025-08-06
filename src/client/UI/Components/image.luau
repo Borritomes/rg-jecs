@@ -13,15 +13,19 @@ return function(
 		Size: Fusion.UsedAs<UDim2>?,
 
 		Image: Fusion.UsedAs<string>?,
+		ImageColor3: Fusion.UsedAs<Color3>?,
 
-		onActivate: () -> ()?,
+		Parent: Fusion.UsedAs<Instance>?,
 
-		[typeof(Fusion.Children)]: Fusion.Child?,
+		OnActivated: () -> ()?,
+		OnAltActivated: () -> ()?,
 	}
 ): Fusion.Child
 	local scope = scope:innerScope()
 
-	if props.onActivate ~= nil then
+	local isButton = props.OnActivated ~= nil or props.OnAltActivated ~= nil
+
+	if isButton == true then
 		return scope:New "ImageButton" {
 			Name = props.Name,
 
@@ -29,9 +33,13 @@ return function(
 			Position = props.Position,
 			Size = props.Size,
 
-			Image = props.Image,
+			Image = props.Image or "rbxasset://textures/ui/GuiImagePlaceholder.png",
+			ImageColor3 = props.ImageColor3,
 
-			[Fusion.OnEvent "MouseButton1Click"] = props.onActivate,
+			Parent = props.Parent,
+
+			[Fusion.OnEvent "MouseButton1Click"] = props.OnActivated,
+			[Fusion.OnEvent "MouseButton2Click"] = props.OnAltActivated,
 		}
 	else
 		return scope:New "ImageLabel" {
@@ -41,9 +49,10 @@ return function(
 			Position = props.Position,
 			Size = props.Size,
 
-			Image = props.Image,
+			Image = props.Image or "rbxasset://textures/ui/GuiImagePlaceholder.png",
+			ImageColor3 = props.ImageColor3,
 
-			[Fusion.Children] = props[Fusion.Children],
+			Parent = props.Parent,
 		}
 	end
 end

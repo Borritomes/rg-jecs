@@ -106,7 +106,9 @@ local function calcMoveVelocity(
 	if isOnGround == true then
 		velocity = friction(velocity)
 		velocity += accelerate(wishVelocity, wishDir, velocity)
-		velocity -= Vector3.new(0, cvars.Gravity * (1 / cvars.TickRate), 0)
+		if isJump == true then
+			velocity += Vector3.new(0, cvars.JumpForce, 0)
+		end
 		return velocity
 	else
 		velocity += airAccelerate(wishVelocity, velocity)

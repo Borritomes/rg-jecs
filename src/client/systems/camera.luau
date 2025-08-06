@@ -2,9 +2,11 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
+local Fusion = require(ReplicatedStorage.Shared.Fusion)
+local UIState = require(ReplicatedStorage.Client.UI.UIState)
 local cts = require(ReplicatedStorage.Shared.cts)
 local cvars = require(ReplicatedStorage.Shared.cvars)
-local jecs = require(ReplicatedStorage.Shared.jecs)
+local jecs = require(ReplicatedStorage.Packages.jecs)
 local phases = require(ReplicatedStorage.Shared.phases)
 local world = require(ReplicatedStorage.Shared.world)
 
@@ -34,10 +36,11 @@ local function camera()
 
 	local clamp = cvars.CameraClampY
 	local mouseLocked = cvars.MouseLocked
+	local consoleEnabled = Fusion.peek(UIState.consoleEnabled)
 
-	if mouseLocked == true then
+	if mouseLocked == true and consoleEnabled == false then
 		UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
-	elseif mouseLocked == false then
+	else
 		UserInputService.MouseBehavior = Enum.MouseBehavior.Default
 	end
 

@@ -23,8 +23,10 @@ beam.Attachment0 = a1
 beam.Attachment1 = a2
 beam.Parent = workspace]]
 
+local buttonQuery = world:query(cts.Controller, cts.Position):cached()
+
 local function buttonInteract()
-	for entity, controller, position in world:query(cts.Controller, cts.Position) do
+	for entity, controller: Player, position: Vector3 in buttonQuery do
 		local cmd = playersState[controller].cmdBuffer[1]
 		if cmd == nil then
 			continue
@@ -51,16 +53,15 @@ local function buttonInteract()
 				local buttonEvent = instance:GetAttribute("buttonEvent")
 				local params = instance:GetAttribute("eventParams")
 
-				if typeof(params) ~= "string" then
-					return
-				end
-				if buttonEvent == nil then
+				if buttonEvent == nil or typeof(buttonEvent) ~= "string" then
 					continue
 				end
 
 				if events[buttonEvent] ~= nil then
-					if params ~= nil then
-						events[buttonEvent](table.unpack(params:split(";")))
+					if typeof(params) == "string" then
+						events[buttonEvent](entity, controller, table.unpack(params:split(";")))
+					else
+						events[buttonEvent](entity, controller)
 					end
 				end
 			end

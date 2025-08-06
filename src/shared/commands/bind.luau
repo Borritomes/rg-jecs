@@ -10,14 +10,21 @@ if RunService:IsServer() then
 	playerData = require(ServerScriptService.Server.playerData)
 end
 
-local function bind(player: Player, keycode: string, command: string)
+local function bind(player: Player?, keycode: string?, command: string?)
 	if RunService:IsClient() then
+		return
+	end
+	if player == nil or keycode == nil or command == nil then
 		return
 	end
 
 	playerData:update(player, function(data)
-		if table.find(data.bindings[keycode], command) then
-			return false
+		if data.bindings[keycode] == nil then
+			data.bindings[keycode] = {}
+		else
+			if table.find(data.bindings[keycode], command) then
+				return false
+			end
 		end
 
 		table.insert(data.bindings[keycode], command)
@@ -30,5 +37,6 @@ return commands.createCommand({
 	name = "bind",
 	run = bind,
 	protection = "none",
-	context = "client",
+	context = "server",
+	args = { { name = "key", type = "string" }, { name = "command", type = "string" } },
 })

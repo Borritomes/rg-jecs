@@ -1,12 +1,19 @@
+--!nolint FunctionUnused
+--!nolint LocalShadow
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local changeCmd = require(ReplicatedStorage.Shared.utils.changeCmd)
 local config = require(ReplicatedStorage.Client.config)
-local cts = require(ReplicatedStorage.Shared.cts)
 local routes = require(ReplicatedStorage.Shared.routes)
 
-type command = cts.command
+type command = {
+	name: string,
+	run: (...any) -> (),
+	protection: "none" | "cheat" | "dev",
+	context: "client" | "server",
+	args: { { name: string, type: string } }?,
+}
 type commandQueue = { { command: command?, args: { any } } }
 
 local isServer = RunService:IsServer()
@@ -40,11 +47,11 @@ local function stringToType(value: string, Type: string): (boolean, any)
 	return false
 end
 
-function commands.registerCommand(command: cts.command)
+function commands.registerCommand(command: command)
 	commands.registered[command.name] = command
 end
 
-function commands.createCommand(props: cts.command): cts.command
+function commands.createCommand(props: command): command
 	return {
 		name = props.name,
 		run = props.run,
@@ -54,7 +61,7 @@ function commands.createCommand(props: cts.command): cts.command
 	}
 end
 
-function commands.createCmdCommand(name): cts.command
+function commands.createCmdCommand(name): command
 	commands.registered["-" .. name] = {
 		name = name,
 		run = function()
@@ -183,13 +190,10 @@ end
 function commands.executeQueue(queue: commandQueue): boolean
 	for i, value in queue do
 		if value.command then
-			if isServer or value.command.protection == nil or value.command.protection == "none" then
+			if isServer or value.command.context == "client" and value.command.protection == "none" then
 				value.command.run(table.unpack(value.args))
 			else
-				if value.command.context == "server" then
-					print("sent command to server")
-					routes.command:send(value.command.name, value.args)
-				end
+				routes.command:send(value.command.name, value.args)
 			end
 		else
 			return false
@@ -199,16 +203,19 @@ function commands.executeQueue(queue: commandQueue): boolean
 	return true
 end
 
-function commands.executeSingle(command: string, args: { any }?)
+function commands.executeSingle(command: string, args: { any }?, player: Player?)
 	local command = commands.registered[command]
 	if command == nil then
 		return
 	end
+	if typeof(player) ~= "Instance" then
+		return
+	end
 
 	if args ~= nil then
-		command.run(table.unpack(args))
+		command.run(player, table.unpack(args))
 	else
-		command.run()
+		command.run(player)
 	end
 end
 

@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local jecs = require(ReplicatedStorage.Shared.jecs)
-local world = require(script.Parent.world)
+local jecs = require(ReplicatedStorage.Packages.jecs)
+local world = require(ReplicatedStorage.Shared.world)
 
 export type command = {
 	name: string,
@@ -15,21 +15,22 @@ export type playerData = { commands: { commandBindings } }
 
 local cts = {
 	Controller = world:component() :: jecs.Entity<Player>,
-	TickAdjustment = world:component() :: jecs.Entity<{ fastForward: number, pause: number }>,
 	Tick = world:component() :: jecs.Entity<number>,
 	LastServerProcessedCmd = world:component() :: jecs.Entity<number>,
-	AdjustmentGeneration = world:component() :: jecs.Entity<number>,
 	Position = world:component() :: jecs.Entity<Vector3>,
 	Size = world:component() :: jecs.Entity<Vector3>,
 	Velocity = world:component() :: jecs.Entity<Vector3>,
 	Name = world:component() :: jecs.Entity<string>,
-	InputCommandMap = world:component() :: jecs.Entity<{ [any]: any }>,
+	Health = world:component() :: jecs.Entity<number>,
+	InputCommandMap = world:component() :: jecs.Entity<{ [string]: any }>,
 	BindingMap = world:component() :: jecs.Entity<{ [any]: any }>,
+	OnKilled = world:component() :: jecs.Entity<() -> ()>,
 	OnButtonActivate = world:component() :: jecs.Entity<(Player) -> ()>,
 
 	Predicted = world:component(),
 	Interp = world:component(),
 
+	Invurlnerable = jecs.tag(),
 	InterpolatePosition = jecs.tag(),
 	Replicate = jecs.tag(),
 	Button = jecs.tag(),

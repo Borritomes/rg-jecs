@@ -5,7 +5,7 @@ registry = "test"
 [[package]]
 name = "4611hd/rg-jecs"
 version = "0.1.0"
-dependencies = [["Lyra", "paradoxum-games/lyra@0.5.0-rc.0"], ["Planck", "yetanotherclown/planck@0.2.0-rc.2"], ["PlanckJabby", "yetanotherclown/planck-jabby@0.2.0-rc.1"], ["PlanckRunService", "yetanotherclown/planck-runservice@0.2.0-rc.1"], ["YetAnotherNet", "yetanotherclown/yetanothernet@0.10.0-alpha.5"], ["jabby", "alicesaidhi/jabby@0.2.2"], ["t", "osyrisrblx/t@3.1.1"], ["tablekit", "ffrostflame/tablekit@0.2.4"], ["ui-labs", "pepeeltoro41/ui-labs@2.3.8"]]
+dependencies = [["Lyra", "paradoxum-games/lyra@0.5.0-rc.0"], ["Planck", "yetanotherclown/planck@0.2.0-rc.2"], ["PlanckJabby", "yetanotherclown/planck-jabby@0.2.0-rc.1"], ["PlanckRunService", "yetanotherclown/planck-runservice@0.2.0-rc.1"], ["YetAnotherNet", "yetanotherclown/yetanothernet@0.10.0-alpha.5"], ["jabby", "alicesaidhi/jabby@0.2.2"], ["jecs", "ukendio/jecs@0.6.1"], ["replecs", "pepeeltoro41/replecs@0.1.0-alpha5"], ["t", "osyrisrblx/t@3.1.1"], ["tablekit", "ffrostflame/tablekit@0.2.4"], ["ui-labs", "pepeeltoro41/ui-labs@2.3.8"]]
 
 [[package]]
 name = "alicesaidhi/jabby"
@@ -43,6 +43,11 @@ version = "0.5.0-rc.0"
 dependencies = [["Promise", "evaera/promise@4.0.0"], ["t", "osyrisrblx/t@3.1.1"]]
 
 [[package]]
+name = "pepeeltoro41/replecs"
+version = "0.1.0-alpha5"
+dependencies = [["jecs", "ukendio/jecs@0.9.0-rc.8"]]
+
+[[package]]
 name = "pepeeltoro41/ui-labs"
 version = "2.3.8"
 dependencies = []
@@ -50,6 +55,16 @@ dependencies = []
 [[package]]
 name = "ukendio/jecs"
 version = "0.5.5"
+dependencies = []
+
+[[package]]
+name = "ukendio/jecs"
+version = "0.6.1"
+dependencies = []
+
+[[package]]
+name = "ukendio/jecs"
+version = "0.9.0-rc.8"
 dependencies = []
 
 [[package]]

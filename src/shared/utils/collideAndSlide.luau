@@ -1,7 +1,8 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
-local projectV3OnPlane = require(ReplicatedStorage.Shared.utils.projectV3OnPlane)
+local function projectV3OnPlane(unitVector3: Vector3, normalVector3: Vector3): Vector3
+	return unitVector3 - unitVector3:Dot(normalVector3) * normalVector3
+end
 
 local MARGIN = 0.05
 local MAX_DEPTH = 4

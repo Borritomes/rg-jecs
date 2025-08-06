@@ -17,6 +17,7 @@ local template = {
 		T = { "test" },
 		Up = { "zoomIn" },
 		Down = { "zoomOut" },
+		Backquote = { "toggleConsole" },
 	},
 }
 

@@ -9,20 +9,19 @@ return function(
 	scope: Fusion.Scope,
 	props: {
 		IgnoreGuiInset: Fusion.UsedAs<boolean>?,
+		Enabled: Fusion.UsedAs<boolean>?,
 
 		[typeof(Fusion.Children)]: Fusion.Child?,
 	}
 ): Fusion.Child
 	return scope:New "ScreenGui" {
 		IgnoreGuiInset = props.IgnoreGuiInset,
+		Enabled = props.Enabled,
 
 		Parent = playerGui,
 
 		[Fusion.Children] = {
 			props[Fusion.Children],
-			scope:New "StyleLink" {
-				StyleSheet = ReplicatedStorage.Rsml.BaseStyle,
-			},
 		},
 	}
 end
