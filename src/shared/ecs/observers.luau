@@ -1,6 +1,6 @@
 --!strict
 local ReplicatedStorage = game:GetService "ReplicatedStorage"
-local jecs = require(ReplicatedStorage.Packages.jecs)
+local jecs = require(ReplicatedStorage.Shared.jecs)
 
 export type Iter<T...> = (query: Query<T...>) -> () -> (jecs.Entity, T...)
 

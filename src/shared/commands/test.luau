@@ -5,7 +5,7 @@ return {
 	name = "test",
 	run = function()
 		print("test")
-		cvars.MouseLocked = not cvars.MouseLocked
+		cvars.cl.MouseLocked = not cvars.cl.MouseLocked
 	end,
 	protection = "server",
 	context = "client",

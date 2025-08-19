@@ -2,7 +2,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local cts = require(ReplicatedStorage.Shared.cts)
-local jecs = require(ReplicatedStorage.Packages.jecs)
+local jecs = require(ReplicatedStorage.Shared.jecs)
 local phases = require(ReplicatedStorage.Shared.phases)
 local routes = require(ReplicatedStorage.Shared.routes)
 local tablekit = require(ReplicatedStorage.Packages.tablekit)
@@ -114,5 +114,5 @@ end
 
 return {
 	system = replicate,
-	phase = phases.SendState,
+	phase = phases.SendReplication,
 }

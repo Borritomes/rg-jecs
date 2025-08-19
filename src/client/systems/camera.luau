@@ -6,7 +6,7 @@ local Fusion = require(ReplicatedStorage.Shared.Fusion)
 local UIState = require(ReplicatedStorage.Client.UI.UIState)
 local cts = require(ReplicatedStorage.Shared.cts)
 local cvars = require(ReplicatedStorage.Shared.cvars)
-local jecs = require(ReplicatedStorage.Packages.jecs)
+local jecs = require(ReplicatedStorage.Shared.jecs)
 local phases = require(ReplicatedStorage.Shared.phases)
 local world = require(ReplicatedStorage.Shared.world)
 
@@ -32,10 +32,10 @@ local function camera()
 	if currentCamera.CameraType ~= Enum.CameraType.Scriptable then
 		currentCamera.CameraType = Enum.CameraType.Scriptable
 	end
-	currentCamera.FieldOfView = cvars.fov
+	currentCamera.FieldOfView = cvars.cl.Fov
 
-	local clamp = cvars.CameraClampY
-	local mouseLocked = cvars.MouseLocked
+	local clamp = cvars.cl.CameraClampY
+	local mouseLocked = cvars.cl.MouseLocked
 	local consoleEnabled = Fusion.peek(UIState.consoleEnabled)
 
 	if mouseLocked == true and consoleEnabled == false then
@@ -47,7 +47,7 @@ local function camera()
 	currentCamera.CFrame = CFrame.new(position)
 
 	local mouseDelta = UserInputService:GetMouseDelta()
-	local mouseSensitivity = UserSettings().GameSettings.MouseSensitivity * cvars.Sensitivity
+	local mouseSensitivity = UserSettings().GameSettings.MouseSensitivity * cvars.cl.Sensitivity
 	local ySize = size.Y / 2
 
 	xRotation += math.rad((mouseDelta.X * 0.5) * mouseSensitivity * -1)
@@ -58,7 +58,7 @@ local function camera()
 	local cameraRotate = (currentCamera.CFrame + currentCamera.CFrame.UpVector * ySize)
 		* CFrame.fromEulerAnglesYXZ(yRotation, xRotation, 0)
 
-	currentCamera.CFrame = cameraRotate - cameraRotate.LookVector * cvars.CameraOffset
+	currentCamera.CFrame = cameraRotate - cameraRotate.LookVector * cvars.cl.CameraOffset
 end
 
 return {

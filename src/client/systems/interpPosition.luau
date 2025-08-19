@@ -1,8 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
 
 local cts = require(ReplicatedStorage.Shared.cts)
 local cvars = require(ReplicatedStorage.Shared.cvars)
-local jecs = require(ReplicatedStorage.Packages.jecs)
+local jecs = require(ReplicatedStorage.Shared.jecs)
 local phases = require(ReplicatedStorage.Shared.phases)
 local world = require(ReplicatedStorage.Shared.world)
 
@@ -11,8 +12,7 @@ local function interpPosition()
 		position = world:get(entity, jecs.pair(cts.Predicted, cts.Position)) or position
 
 		local interpPos = world:get(entity, jecs.pair(cts.Interp, cts.Position)) or position
-		local posDiff = position - interpPos
-		interpPos += (posDiff * cvars.Interp)
+		interpPos = TweenService:SmoothDamp(interpPos, position, Vector3.zero, cvars.cl.Interp, nil, cvars.cl.Interp)
 
 		world:set(entity, jecs.pair(cts.Interp, cts.Position), interpPos)
 	end

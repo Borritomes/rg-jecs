@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local jabby = require(ReplicatedStorage.Packages.jabby)
-local jecs = require(ReplicatedStorage.Packages.jecs)
+local jecs = require(ReplicatedStorage.Shared.jecs)
 local observers = require(ReplicatedStorage.Shared.ecs.observers)
 
 local world = observers(jecs.world())

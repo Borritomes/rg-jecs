@@ -26,4 +26,8 @@ cmd.current = {} :: cmd
 
 cmd.record = {} :: cmdRecord
 
+cmd.unconfirmed = {} :: { cmd? }
+
+cmd.lastConfirmed = 0
+
 return cmd

@@ -1,14 +1,15 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local cts = require(ReplicatedStorage.Shared.cts)
-local jecs = require(ReplicatedStorage.Packages.jecs)
+local jecs = require(ReplicatedStorage.Shared.jecs)
 local phases = require(ReplicatedStorage.Shared.phases)
 local world = require(ReplicatedStorage.Shared.world)
 
 local parts = {} :: { [number]: Part? }
 
 local function render()
-	for entity, position in world:query(jecs.pair(cts.Interp, cts.Position)) do
+	for entity, position in world:query(cts.Position) do
+		position = world:get(entity, jecs.pair(cts.Interp, cts.Position)) or position
 		if parts[entity] == nil then
 			local part = Instance.new("Part")
 			part.Anchored = true

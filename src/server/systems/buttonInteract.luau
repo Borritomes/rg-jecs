@@ -40,7 +40,7 @@ local function buttonInteract()
 				offset = Vector3.new(0, size.Y / 2, 0)
 			end
 
-			local lookDirection = (cmd.cameraCFrame or CFrame.new(1, 0, 0)).LookVector * cvars.useRange
+			local lookDirection = (cmd.cameraCFrame or CFrame.new(1, 0, 0)).LookVector * cvars.sv.useRange
 			position += offset
 
 			local result = workspace:Raycast(position, lookDirection, raycastParams)
@@ -50,7 +50,7 @@ local function buttonInteract()
 			if result ~= nil then
 				--a2.WorldPosition = result.Position
 				local instance = result.Instance
-				local buttonEvent = instance:GetAttribute("buttonEvent")
+				local buttonEvent = instance:GetAttribute("onUse")
 				local params = instance:GetAttribute("eventParams")
 
 				if buttonEvent == nil or typeof(buttonEvent) ~= "string" then
@@ -71,5 +71,5 @@ end
 
 return {
 	system = buttonInteract,
-	phase = phases.InputProcess,
+	phase = phases.First,
 }

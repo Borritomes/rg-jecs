@@ -16,5 +16,5 @@ end
 
 return {
 	system = serverCommands,
-	phase = phases.InputProcess,
+	phase = phases.Input,
 }

@@ -26,7 +26,7 @@ end
 
 ContextActionService:BindAction("Open Jabby Home", createWidget, false, Enum.KeyCode.LeftAlt)
 
-local timeRemaining = 1 / cvars.TickRate
+local timeRemaining = 1 / cvars.sv.TickRate
 local isNetFrameActive = false
 local systems = {}
 
@@ -53,7 +53,11 @@ scheduler
 	:run(pipelines.Heartbeat)
 
 RunService.Heartbeat:Connect(function(deltaTime)
-	local tickRate = cvars.TickRate
+	local tickRate = cvars.sv.TickRate
+	local overflow = world:get(cts.CmdBufOverflow, cts.CmdBufOverflow) or 0
+	if overflow ~= 0 then
+		tickRate += overflow
+	end
 
 	if isNetFrameActive == false then
 		beginFrame()
@@ -82,6 +86,7 @@ RunService.Heartbeat:Connect(function(deltaTime)
 	end
 
 	if queuedTicks > 0 then
+		world:set(cts.DeltaTime, cts.DeltaTime, 1 / tickRate)
 		for count = 0, queuedTicks - 1 do
 			world:set(cts.Tick, cts.Tick, (world:get(cts.Tick, cts.Tick) or 0) + 1)
 			scheduler:run(pipelines.FixedUpdate)

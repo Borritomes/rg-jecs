@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local cts = require(ReplicatedStorage.Shared.cts)
-local jecs = require(ReplicatedStorage.Packages.jecs)
+local jecs = require(ReplicatedStorage.Shared.jecs)
 local world = require(ReplicatedStorage.Shared.world)
 local events: { [string]: (jecs.Entity<unknown> | "none", Player | string, ...any) -> () } = {}
 

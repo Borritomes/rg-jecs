@@ -2,9 +2,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local cmd = require(ReplicatedStorage.Client.cmd)
 
-return function(command: cmd.cmd?): (Vector3, boolean)
+return function(command: cmd.cmd?): Vector3
 	local wishDir = Vector3.zero
-	local wishJump = false
 
 	if command == nil then
 		return Vector3.zero, false
@@ -29,13 +28,14 @@ return function(command: cmd.cmd?): (Vector3, boolean)
 	if command.strafeRight ~= nil and command.strafeRight.weight > 0 then
 		wishDir += rightVector
 	end
-	if command.jump ~= nil and command.jump.began == true then
-		wishJump = true
-	end
 
 	if wishDir ~= Vector3.zero then
 		wishDir = wishDir.Unit
 	end
 
-	return wishDir, wishJump
+	if command.jump ~= nil and command.jump.began == true then
+		wishDir += Vector3.new(0, 1, 0)
+	end
+
+	return wishDir
 end

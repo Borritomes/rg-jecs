@@ -14,7 +14,7 @@ local function render()
 			part.CanCollide = false
 			part.Size = Vector3.new(2, 4, 2)
 			part.Color = Color3.new(0, 1, 0)
-			part.Transparency = 1
+			part.Transparency = 0.5
 			part.Parent = workspace
 
 			parts[entity] = part

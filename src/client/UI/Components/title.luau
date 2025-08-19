@@ -4,6 +4,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Fusion = require(ReplicatedStorage.Shared.Fusion)
 local Text = require(ReplicatedStorage.Client.UI.Components.Text)
 local theme = require(ReplicatedStorage.Client.UI.theme)
+local usePx = require(ReplicatedStorage.Client.UI.Utils.usePx)
 
 return function(
 	scope: Fusion.Scope,
@@ -26,6 +27,7 @@ return function(
 ): Fusion.Child
 	local scope = scope:innerScope({
 		Text = Text,
+		usePx = usePx,
 	})
 
 	local style = theme.context:now()
@@ -39,7 +41,7 @@ return function(
 		AutomaticSize = props.AutomaticSize,
 
 		Text = props.Text,
-		TextSize = style.textTitle,
+		TextSize = scope:usePx(style.textTitle),
 		TextColor3 = style[props.Color] or style.title,
 		TextXAlignment = props.TextXAlignment,
 		TextYAlignment = props.TextYAlignment,

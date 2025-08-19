@@ -24,7 +24,7 @@ theme.styles = {
 		padding = 8,
 		strokeWidth = 2,
 
-		textTitle = 16,
+		textTitle = 28,
 		textCaption = 20,
 	},
 	light = {
@@ -44,7 +44,7 @@ theme.styles = {
 		padding = 8,
 		strokeWidth = 2,
 
-		textTitle = 16,
+		textTitle = 28,
 		textCaption = 20,
 	},
 }

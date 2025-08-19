@@ -6,7 +6,7 @@ local cvars = require(ReplicatedStorage.Shared.cvars)
 return commands.createCommand({
 	name = "zoomIn",
 	run = function()
-		cvars.CameraOffset -= 1
+		cvars.cl.CameraOffset -= 1
 	end,
 	protection = "none",
 	context = "client",

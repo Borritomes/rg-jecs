@@ -8,15 +8,11 @@ local _jabby = require(ReplicatedStorage.Packages.jabby)
 local cts = require(ReplicatedStorage.Shared.cts)
 local cvars = require(ReplicatedStorage.Shared.cvars)
 local pipelines = require(ReplicatedStorage.Shared.pipelines)
-local replecs = require(ReplicatedStorage.Packages.replecs)
 local routes = require(ReplicatedStorage.Shared.routes)
 local scheduler = require(ReplicatedStorage.Shared.scheduler)
 local world = require(ReplicatedStorage.Shared.world)
 
-local replicator = replecs.create(world).server
-replicator:init()
-
-local timeRemaining = 1 / cvars.TickRate
+local timeRemaining = 1 / cvars.sv.TickRate
 local isNetFrameActive = false
 local systems = {}
 
@@ -46,7 +42,7 @@ scheduler
 	:run(pipelines.Heartbeat)
 
 RunService.Heartbeat:Connect(function(deltaTime)
-	local tickRate = cvars.TickRate
+	local tickRate = cvars.sv.TickRate
 
 	timeRemaining -= deltaTime
 
