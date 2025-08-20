@@ -12,6 +12,7 @@ local cvars = {
 		Friction = 4,
 		JumpForce = 270,
 		useRange = 15,
+		MaxSlope = 0.7,
 	},
 	cl = {
 		Interp = 0.2,

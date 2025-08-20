@@ -15,7 +15,8 @@ local function characterMovement()
 		local size = world:get(entity, cts.Size)
 		local cmd = playersState[controller].cmdBuffer[1]
 		local wishDir = getWishDir(cmd)
-		local newPosition, newVelocity = calcMovement(wishDir, position, velocity, size)
+		local newPosition, newVelocity = calcMovement(wishDir, position, velocity, 1 / cvars.sv.TickRate, size)
+		--print(newPosition)
 		if cmd ~= nil and cmd.timestamp ~= nil then
 			local overflow = cvars.sv.CmdBufferTarget - #playersState[controller].cmdBuffer
 			routes.confirmCmd:send(cmd.timestamp, if overflow ~= 0 then overflow else nil):to(controller)
