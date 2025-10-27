@@ -6,21 +6,45 @@ local playersState = require(ServerScriptService.Server.playersState)
 local routes = require(ReplicatedStorage.Shared.routes)
 
 local function receiveCmd()
-	for pos, sender, cmd in routes.cmd:query():iter() do
+	for pos, sender, cmds in routes.cmd:query():iter() do
 		if typeof(sender) == "string" then
 			continue
 		end
 
-		if cmd == nil then
+		if cmds == nil then
 			continue
 		end
 
-		if cmd.timestamp == nil then
-			warn("cmd timestamp is nil")
-			continue
+		local lowestTimestamp
+		local timestamps = {}
+		for i, v in playersState[sender].cmdBuffer do
+			if lowestTimestamp == nil then
+				lowestTimestamp = v.timestamp
+			elseif v.timestamp < lowestTimestamp then
+				lowestTimestamp = v.timestamp
+			end
+			timestamps[v.timestamp] = v
+		end
+		local lowestTimestamp = lowestTimestamp or 0
+		for i, cmd in cmds do
+			if cmd == nil then
+				continue
+			end
+			local currentTimestamp = cmd.timestamp
+			if currentTimestamp == nil then
+				continue
+			end
+			if currentTimestamp > lowestTimestamp and timestamps[currentTimestamp] == nil then
+				timestamps[currentTimestamp] = cmd
+			end
 		end
 
-		table.insert(playersState[sender].cmdBuffer, cmd)
+		local newBuffer = {}
+		for i, v in timestamps do
+			table.insert(newBuffer, v)
+		end
+
+		playersState[sender].cmdBuffer = newBuffer
 	end
 end
 

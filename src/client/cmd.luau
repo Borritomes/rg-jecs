@@ -12,7 +12,9 @@ export type cmd = {
 }
 export type cmdRecord = { [number]: cmd? }
 
-local cmd = {}
+local cmd = {
+	lastConfirmed = 0,
+}
 
 function cmd.inputcmd()
 	return {
@@ -27,7 +29,5 @@ cmd.current = {} :: cmd
 cmd.record = {} :: cmdRecord
 
 cmd.unconfirmed = {} :: { cmd? }
-
-cmd.lastConfirmed = 0
 
 return cmd

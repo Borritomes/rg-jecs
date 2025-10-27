@@ -2,7 +2,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local YetAnotherNet = require(ReplicatedStorage.Packages.YetAnotherNet)
 local cmd = require(ReplicatedStorage.Client.cmd)
-local cts = require(ReplicatedStorage.Shared.cts)
 local jecs = require(ReplicatedStorage.Shared.jecs)
 
 local route = YetAnotherNet.Route
@@ -38,7 +37,7 @@ local playerAdded: Route<{ Tick: number }> = route.new()
 local playerData: Route<any> = route.new()
 
 --TODO: type check with t
-local cmdRoute: Route<cmd.cmd?> = route.new()
+local cmdRoute: Route<{ cmd.cmd? }> = route.new({ Channel = "Unreliable" })
 
 local confirmCmd: Route<number, number?> = route.new()
 

@@ -26,6 +26,7 @@ local function movementPredict()
 		local size = world:get(entity, cts.Size)
 
 		local currentTick = world:get(cts.Tick, cts.Tick) or 0
+		local predictedVelocity = world:get(entity, jecs.pair(cts.Predicted, cts.Velocity))
 		local predictedPosition = world:get(entity, jecs.pair(cts.Predicted, cts.Position))
 		local newPosition = position
 		local newVelocity = velocity
@@ -35,7 +36,8 @@ local function movementPredict()
 		if positionHistory[cmd.lastConfirmed] == position or cvars.cl.CorrectMispredict == false then
 			local wishDir = getWishDir(cmd.record[currentTick])
 
-			newPosition, newVelocity = calcMovement(wishDir, predictedPosition or position, velocity, deltaTime, size)
+			newPosition, newVelocity =
+				calcMovement(wishDir, predictedPosition or position, predictedVelocity or velocity, deltaTime, size)
 		else
 			print("mispredict")
 			for i, command in cmd.unconfirmed do

@@ -2,10 +2,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local clampV3 = require(ReplicatedStorage.Shared.utils.clampV3)
 local cvars = require(ReplicatedStorage.Shared.cvars)
-local unitsToStuds = require(ReplicatedStorage.Shared.utils.unitsToStuds)
 local v3UnitsToStuds = require(ReplicatedStorage.Shared.utils.v3UnitsToStuds)
 local MAX_DEPTH = 5
-local MARGIN = 0.015
+local MARGIN = 0.05
 local DOUBLE_MARGIN = MARGIN * 2
 
 local function vectorNormalize(vec: Vector3)
@@ -43,12 +42,12 @@ local function accelerate(wishDir: Vector3, velocity: Vector3, deltaTime: number
 		return velocity
 	end
 
-	local accelSpeed = wishSpeed * cvars.sv.Accelerate * deltaTime
+	local accelSpeed = wishSpeed --* cvars.sv.Accelerate * deltaTime
 	if accelSpeed > addspeed then
 		accelSpeed = addspeed
 	end
 
-	return velocity + accelSpeed * wishDir
+	return velocity + (accelSpeed * wishDir)
 end
 
 local function airAccelerate(wishDir: Vector3, velocity: Vector3, deltaTime: number): Vector3
@@ -67,7 +66,7 @@ local function airAccelerate(wishDir: Vector3, velocity: Vector3, deltaTime: num
 		return velocity
 	end
 
-	local accelSpeed = uncappedWishSpeed * cvars.sv.Accelerate * deltaTime
+	local accelSpeed = uncappedWishSpeed -- * cvars.sv.Accelerate * deltaTime
 	if accelSpeed > addSpeed then
 		accelSpeed = addSpeed
 	end
@@ -75,51 +74,12 @@ local function airAccelerate(wishDir: Vector3, velocity: Vector3, deltaTime: num
 	return velocity + (wishVelocity * accelSpeed)
 end
 
---[[void SV_UserFriction (void)
-{
-	float	*vel;
-	float	speed, newspeed, control;
-	vec3_t	start, stop;
-	float	friction;
-	trace_t	trace;
-	
-	vel = velocity;
-	
-	speed = sqrt(vel[0]*vel[0] +vel[1]*vel[1]);
-	if (!speed)
-		return;
-
-// if the leading edge is over a dropoff, increase friction
-	start[0] = stop[0] = origin[0] + vel[0]/speed*16;
-	start[1] = stop[1] = origin[1] + vel[1]/speed*16;
-	start[2] = origin[2] + sv_player->v.mins[2];
-	stop[2] = start[2] - 34;
-
-	trace = SV_Move (start, vec3_origin, vec3_origin, stop, true, sv_player);
-
-	if (trace.fraction == 1.0)
-		friction = sv_friction.value*sv_edgefriction.value;
-	else
-		friction = sv_friction.value;
-
-// apply friction	
-	control = speed < sv_stopspeed.value ? sv_stopspeed.value : speed;
-	newspeed = speed - host_frametime*control*friction;
-	
-	if (newspeed < 0)
-		newspeed = 0;
-	newspeed /= speed;
-
-	vel[0] = vel[0] * newspeed;
-	vel[1] = vel[1] * newspeed;
-	vel[2] = vel[2] * newspeed;
-}]]
 local function friction(velocity: Vector3, deltaTime: number)
 	local vel = velocity
 
 	local speed = math.sqrt(vel.X * vel.X + vel.Z * vel.Z)
-	if not speed then
-		return velocity
+	if speed == 0 then
+		return Vector3.zero
 	end
 
 	local friction = cvars.sv.Friction
@@ -127,7 +87,7 @@ local function friction(velocity: Vector3, deltaTime: number)
 	--TODO: if the leading edge is over a dropoff, increase friction
 
 	local control = if speed < cvars.sv.StopSpeed then cvars.sv.StopSpeed else speed
-	local newSpeed = speed - deltaTime * control * friction
+	local newSpeed = speed - (control * friction * deltaTime)
 
 	if newSpeed < 0 then
 		newSpeed = 0
@@ -148,7 +108,7 @@ local function collideAndSlide(position: Vector3, velocity: Vector3, depth: numb
 
 	local distance = velocity.Magnitude + MARGIN
 
-	local result = cast(position, velocity.Unit * distance, size)
+	local result = cast(position, vectorNormalize(velocity) * distance, size)
 	if result == nil then
 		return velocity
 	end
@@ -160,12 +120,12 @@ local function collideAndSlide(position: Vector3, velocity: Vector3, depth: numb
 		snapToSurface = Vector3.zero
 	end
 
+	--if result.Normal.Y > cvars.sv.MaxSlope then
 	local magnitude = leftover.Magnitude
 	leftover = projectOnPlane(leftover, result.Normal)
-	if leftover ~= Vector3.zero then
-		leftover = leftover.Unit
-	end
+	leftover = vectorNormalize(leftover)
 	leftover *= magnitude
+	--end
 
 	return snapToSurface + collideAndSlide(position + snapToSurface, leftover, depth + 1, size)
 end
@@ -173,7 +133,7 @@ end
 local function checkIsOnGround(position: Vector3, size: Vector3?): boolean
 	local result = cast(position, Vector3.new(0, -1, 0), size)
 
-	if result ~= nil then
+	if result ~= nil and result.Distance <= MARGIN then
 		return true
 	else
 		return false
@@ -199,10 +159,9 @@ return function(
 	if isOnGround == true then
 		velocity *= Vector3.new(1, 0, 1)
 		newVelocity = friction(velocity, deltaTime)
-		newVelocity = accelerate(wishDir, velocity, deltaTime)
+		newVelocity = accelerate(wishDir, newVelocity, deltaTime)
 		if jump == true then
-			print "jump"
-			newVelocity += Vector3.new(0, unitsToStuds(cvars.sv.JumpForce), 0)
+			newVelocity += Vector3.new(0, cvars.sv.JumpForce, 0)
 		end
 	else
 		newVelocity = airAccelerate(wishDir, velocity, deltaTime)
@@ -212,16 +171,15 @@ return function(
 	local maxVelocity = cvars.sv.MaxVelocity
 
 	local collideVelocity = newVelocity
-	collideVelocity = clampV3(velocity, maxVelocity)
-	collideVelocity = v3UnitsToStuds(velocity)
+	collideVelocity = clampV3(collideVelocity, maxVelocity)
+	collideVelocity = v3UnitsToStuds(collideVelocity)
 	collideVelocity *= cvars.sv.TimeScale
 	collideVelocity *= deltaTime
 
-	local newPosition = position + collideAndSlide(position, newVelocity, 0, size)
+	local newPosition = position + collideAndSlide(position, collideVelocity, 0, size)
 
 	--newPosition = position + wishDir
 	--newVelocity = Vector3.zero
 
-	newVelocity = Vector3.zero
 	return newPosition, newVelocity
 end
