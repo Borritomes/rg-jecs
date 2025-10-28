@@ -3,10 +3,13 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local commands = require(ReplicatedStorage.Shared.commands)
 local cvars = require(ReplicatedStorage.Shared.cvars)
 return commands.createCommand({
-	name = "cl_predict",
+	name = "correctPredict",
 	run = function(newValue)
-		local bool = commands.stringToType(newValue, "boolean")
-		cvars.cl.Predict = bool
+		local ok, bool = commands.stringToType(newValue, "boolean")
+		if ok == false then
+			bool = true
+		end
+		cvars.cl.CorrectMispredict = bool
 	end,
 	protection = "none",
 	context = "client",

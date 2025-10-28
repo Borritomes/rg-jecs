@@ -40,7 +40,7 @@ return function(
 
 		Text = props.Text,
 		TextSize = scope:usePx(style.textCaption),
-		TextColor3 = style.title,
+		TextColor3 = style.colorNeutral,
 		TextXAlignment = props.TextXAlignment,
 		TextYAlignment = props.TextYAlignment,
 		TextWrapped = true,

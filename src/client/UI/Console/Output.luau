@@ -25,10 +25,28 @@ return function(
 
 	local style = theme.context:now()
 	local outputs = scope:Value({})
+	local lastMessage: string? = nil
+	local isLastMessageDupe = false
+	local lastMessageDupeCount = 0
 	LogService.MessageOut:Connect(function(message, messageType)
-		local tempOutputs = Fusion.peek(outputs)
-		table.insert(tempOutputs, message)
-		outputs:set(tempOutputs)
+		if lastMessage == nil or lastMessage ~= message then
+			isLastMessageDupe = false
+			lastMessageDupeCount = 0
+			local tempOutputs = Fusion.peek(outputs)
+			table.insert(tempOutputs, message)
+			outputs:set(tempOutputs)
+		else
+			local tempOutputs = Fusion.peek(outputs)
+			lastMessageDupeCount += 1
+			local nextMessage = message
+			if isLastMessageDupe == true then
+				nextMessage ..= ` (x{lastMessageDupeCount})`
+			end
+			tempOutputs[#tempOutputs] = nextMessage
+			outputs:set(tempOutputs)
+			isLastMessageDupe = true
+		end
+		lastMessage = message
 	end)
 
 	return scope:ScrollingFrame {

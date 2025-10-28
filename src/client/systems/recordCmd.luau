@@ -13,14 +13,7 @@ local function recordCmd()
 	cmd.current.cameraCFrame = workspace.CurrentCamera.CFrame
 
 	cmd.record[currentTick] = tablekit.DeepCopy(cmd.current)
-	--TODO: make cmd.record an array instead of a dictionary
-	local unconfirmed = {}
-	for i, recording in cmd.record do
-		if i > cmd.lastConfirmed then
-			table.insert(unconfirmed, recording)
-		end
-	end
-	routes.cmd:send(unconfirmed)
+	routes.cmd:send(cmd.record[currentTick])
 
 	for pos, sender, confirmed, overflow in routes.confirmCmd:query():iter() do
 		if overflow ~= nil and overflow ~= 0 then

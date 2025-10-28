@@ -183,3 +183,23 @@ return function(
 
 	return newPosition, newVelocity
 end
+-- return function(
+-- 	wishDir: Vector3,
+-- 	position: Vector3,
+-- 	velocity: Vector3,
+-- 	deltaTime: number,
+-- 	size: Vector3?
+-- ): (Vector3, Vector3)
+-- 	local isOnGround = checkIsOnGround(position, size)
+
+-- 	local jump = false
+-- 	if wishDir.Y > 0 then
+-- 		jump = true
+-- 	end
+-- 	wishDir = Vector3.new(wishDir.X, 0, wishDir.Z)
+
+-- 	local newPosition = position + (wishDir * cvars.sv.MaxSpeed * deltaTime)
+-- 	local newVelocity = Vector3.zero
+
+-- 	return newPosition, newVelocity
+-- end

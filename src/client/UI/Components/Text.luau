@@ -27,6 +27,8 @@ return function(
 
 		OnActivated: () -> ()?,
 		OnAltActivated: () -> ()?,
+
+		[typeof(Fusion.Children)]: { Fusion.Child? },
 	}
 ): Fusion.Child
 	local scope = scope:innerScope()
@@ -58,6 +60,8 @@ return function(
 
 			[Fusion.OnEvent "MouseButton1Click"] = props.OnActivated,
 			[Fusion.OnEvent "MouseButton2Click"] = props.OnAltActivated,
+
+			[Fusion.Children] = props[Fusion.Children],
 		}
 	else
 		return scope:New "TextLabel" {
@@ -70,7 +74,8 @@ return function(
 
 			FontFace = style.font,
 			Text = props.Text,
-			TextSize = props.TextSize,
+			RichText = true,
+			TextSize = props.TextSize or 12,
 			TextColor3 = props.TextColor3,
 			TextXAlignment = props.TextXAlignment,
 			TextYAlignment = props.TextYAlignment,
@@ -79,6 +84,8 @@ return function(
 			BackgroundTransparency = props.BackgroundTransparency,
 
 			Parent = props.Parent,
+
+			[Fusion.Children] = props[Fusion.Children],
 		}
 	end
 end

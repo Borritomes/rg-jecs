@@ -21,7 +21,7 @@ local isServer = RunService:IsServer()
 local commands = {}
 commands.registered = {}
 
-local function stringToType(value: string, Type: string): (boolean, any)
+function commands.stringToType(value: string, Type: string): (boolean, any)
 	if Type == "number" then
 		local convertedValue = tonumber(value)
 

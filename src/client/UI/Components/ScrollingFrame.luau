@@ -27,6 +27,8 @@ return function(
 		AnchorPoint = props.AnchorPoint,
 		Position = props.Position,
 		Size = props.Size,
+		CanvasSize = UDim2.fromScale(0, 0),
+		AutomaticCanvasSize = Enum.AutomaticSize.Y,
 		LayoutOrder = props.LayoutOrder,
 
 		BackgroundColor3 = props.BackgroundColor3,

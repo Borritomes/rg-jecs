@@ -37,7 +37,7 @@ local playerAdded: Route<{ Tick: number }> = route.new()
 local playerData: Route<any> = route.new()
 
 --TODO: type check with t
-local cmdRoute: Route<{ cmd.cmd? }> = route.new({ Channel = "Unreliable" })
+local cmdRoute: Route<cmd.cmd?> = route.new({ Channel = "Unreliable" })
 
 local confirmCmd: Route<number, number?> = route.new()
 
